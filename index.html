@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPGdle - Adivinhe o Personagem!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>RPGdle</h1>
+            <p class="subtitle">Adivinhe o personagem de RPG do dia!</p>
+            <nav>
+                <a href="biblioteca.html" class="nav-link">Biblioteca de Personagens</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="game-info">
+                <div class="attempts">
+                    Tentativas: <span id="attempts">0</span>/10
+                </div>
+            </div>
+
+            <div class="input-section">
+                <div class="autocomplete-wrapper">
+                    <input 
+                        type="text" 
+                        id="guess-input" 
+                        placeholder="Digite o nome do personagem..."
+                        autocomplete="off"
+                    >
+                    <div id="autocomplete-list" class="autocomplete-items"></div>
+                </div>
+                <button id="guess-button" class="btn-primary">Adivinhar</button>
+            </div>
+
+            <div id="game-grid" class="game-grid">
+                <div class="grid-header">
+                    <div class="grid-cell header">Gênero</div>
+                    <div class="grid-cell header">Player</div>
+                    <div class="grid-cell header">RPG</div>
+                    <div class="grid-cell header">Estado</div>
+                    <div class="grid-cell header">Participações</div>
+                    <div class="grid-cell header">Idade</div>
+                    <div class="grid-cell header">Altura</div>
+                </div>
+                <div id="guesses-container"></div>
+            </div>
+
+            <div id="message" class="message"></div>
+        </main>
+
+        <footer>
+            <p>Um novo personagem a cada dia! 🎮</p>
+        </footer>
+    </div>
+
+    <!-- Modal de Vitória/Derrota -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title"></h2>
+            <p id="modal-message"></p>
+            <button id="modal-close" class="btn-primary">Fechar</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

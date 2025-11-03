@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca de Personagens - RPGdle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Biblioteca de Personagens</h1>
+            <p class="subtitle">Conheça todos os personagens do RPGdle</p>
+            <nav>
+                <a href="index.html" class="nav-link">Voltar ao Jogo</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="filter-section">
+                <label for="rpg-filter">Filtrar por RPG:</label>
+                <select id="rpg-filter" class="rpg-select">
+                    <option value="todos">Todos os RPGs</option>
+                </select>
+            </div>
+
+            <div id="characters-container" class="characters-grid">
+                <!-- Cards serão inseridos aqui via JavaScript -->
+            </div>
+
+            <div id="no-characters" class="no-characters" style="display: none;">
+                <p>Nenhum personagem encontrado para este RPG.</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>Estude bem para melhorar suas chances! 🎮</p>
+        </footer>
+    </div>
+
+    <script src="biblioteca.js"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+[
+  {
+    "id": 1,
+    "Nome": "Arion",
+    "Gênero": "Homem",
+    "Player": "Bruno",
+    "RPG": "A Queda do Rei Sombrio",
+    "Estado": "Ativo",
+    "Participações": 35,
+    "Idade": 28,
+    "Altura": 185
+  },
+  {
+    "id": 2,
+    "Nome": "Lirael",
+    "Gênero": "Mulher",
+    "Player": "Julia",
+    "RPG": "A Queda do Rei Sombrio",
+    "Estado": "Ativo",
+    "Participações": 32,
+    "Idade": 25,
+    "Altura": 170
+  },
+  {
+    "id": 3,
+    "Nome": "Grommash",
+    "Gênero": "Homem",
+    "Player": "Marcos",
+    "RPG": "A Queda do Rei Sombrio",
+    "Estado": "Inativo",
+    "Participações": 15,
+    "Idade": 42,
+    "Altura": 205
+  },
+  {
+    "id": 4,
+    "Nome": "Vesper",
+    "Gênero": "Indefinido",
+    "Player": "Julia",
+    "RPG": "As Crônicas da Névoa",
+    "Estado": "Ativo",
+    "Participações": 10,
+    "Idade": 150,
+    "Altura": 175
+  },
+  {
+    "id": 5,
+    "Nome": "Thorin",
+    "Gênero": "Homem",
+    "Player": "Carlos",
+    "RPG": "A Queda do Rei Sombrio",
+    "Estado": "Ativo",
+    "Participações": 28,
+    "Idade": 35,
+    "Altura": 165
+  },
+  {
+    "id": 6,
+    "Nome": "Selene",
+    "Gênero": "Mulher",
+    "Player": "Ana",
+    "RPG": "As Crônicas da Névoa",
+    "Estado": "Ativo",
+    "Participações": 18,
+    "Idade": 22,
+    "Altura": 168
+  },
+  {
+    "id": 7,
+    "Nome": "Kael",
+    "Gênero": "Homem",
+    "Player": "Bruno",
+    "RPG": "As Crônicas da Névoa",
+    "Estado": "Inativo",
+    "Participações": 8,
+    "Idade": 30,
+    "Altura": 180
+  },
+  {
+    "id": 8,
+    "Nome": "Morgana",
+    "Gênero": "Mulher",
+    "Player": "Ana",
+    "RPG": "A Queda do Rei Sombrio",
+    "Estado": "Ativo",
+    "Participações": 40,
+    "Idade": 27,
+    "Altura": 172
+  }
+]
