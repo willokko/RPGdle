@@ -215,6 +215,20 @@ function adicionarPalpiteAoGrid(personagem) {
     const row = document.createElement('div');
     row.className = 'guess-row';
     
+    // Adicionar célula do nome (sempre visível)
+    const nameCell = document.createElement('div');
+    nameCell.className = 'grid-cell name-cell';
+    nameCell.textContent = personagem.Nome;
+    
+    // Verificar se é o personagem correto para estilizar
+    if (personagem.Nome === personagemDoDia.Nome) {
+        nameCell.classList.add('correto');
+    } else {
+        nameCell.classList.add('neutral');
+    }
+    
+    row.appendChild(nameCell);
+    
     // Comparar cada atributo
     const atributos = ['Gênero', 'Player', 'RPG', 'Estado', 'Participações', 'Idade', 'Altura'];
     
