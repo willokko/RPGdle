@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Imagem</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        img {
+            border: 2px solid #333;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Teste de Carregamento de Imagens</h1>
+        
+        <h2>Placeholder SVG:</h2>
+        <img src="images/placeholder.svg" alt="Placeholder" width="100">
+        
+        <h2>Imagem João (joao.jpg):</h2>
+        <img src="images/joao.jpg" alt="João" width="100" onerror="this.style.border='3px solid red'; this.alt='ERRO: Imagem não carregou'">
+        
+        <h2>Teste de caminho relativo:</h2>
+        <img src="./images/joao.jpg" alt="João 2" width="100" onerror="this.style.border='3px solid red'; this.alt='ERRO: Imagem não carregou'">
+        
+        <div id="info"></div>
+        
+        <script>
+            // Testar se o arquivo existe
+            fetch('images/joao.jpg')
+                .then(response => {
+                    const info = document.getElementById('info');
+                    if (response.ok) {
+                        info.innerHTML = '<p style="color: green;">✓ Arquivo joao.jpg encontrado! Status: ' + response.status + '</p>';
+                        info.innerHTML += '<p>Content-Type: ' + response.headers.get('content-type') + '</p>';
+                    } else {
+                        info.innerHTML = '<p style="color: red;">✗ Arquivo não encontrado. Status: ' + response.status + '</p>';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('info').innerHTML = '<p style="color: red;">✗ Erro ao buscar arquivo: ' + error + '</p>';
+                });
+        </script>
+    </div>
+</body>
+</html>

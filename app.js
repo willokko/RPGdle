@@ -30,15 +30,113 @@ async function init() {
     carregarEstadoDoJogo();
 }
 
-// Carregar personagens do JSON
+// Carregar personagens do CSV
 async function carregarPersonagens() {
     try {
-        const response = await fetch('personagens.json');
-        personagens = await response.json();
+        const response = await fetch('personagens.csv');
+        const csvText = await response.text();
+        personagens = parseCSV(csvText);
+        console.log('Personagens carregados:', personagens.length);
+        // Debug: mostrar primeiro personagem com imagem
+        const comImagem = personagens.find(p => p.Imagem && p.Imagem !== 'images/placeholder.svg');
+        if (comImagem) {
+            console.log('Exemplo de personagem com imagem:', comImagem.Nome, comImagem.Imagem);
+        }
     } catch (error) {
         console.error('Erro ao carregar personagens:', error);
         showMessage('Erro ao carregar dados do jogo!', 'error');
     }
+}
+
+// Função para parsear CSV
+function parseCSV(csvText) {
+    const lines = csvText.trim().split('\n');
+    const data = [];
+    
+    // Parsear primeira linha (cabeçalhos)
+    const headers = parseCSVLine(lines[0]);
+    
+    for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue; // Pular linhas vazias
+        
+        const values = parseCSVLine(lines[i]);
+        const obj = {};
+        
+        for (let j = 0; j < headers.length; j++) {
+            const header = headers[j];
+            let value = values[j] || '';
+            
+            // Mapear nomes de colunas do CSV para o formato esperado
+            let mappedHeader = header;
+            if (header === 'Personagem') mappedHeader = 'Nome';
+            if (header === 'Status') mappedHeader = 'Estado';
+            
+            // Processar campo Imagem
+            if (mappedHeader === 'Imagem') {
+                // Se vazio, usar placeholder
+                if (!value || value === '') {
+                    value = 'images/placeholder.svg';
+                } else if (!value.startsWith('images/') && !value.startsWith('./images/')) {
+                    value = 'images/' + value;
+                }
+                obj[mappedHeader] = value;
+                continue;
+            }
+            
+            // Processar valores específicos
+            if (mappedHeader === 'Participações') {
+                // Converter "20+" para número ou deixar vazio como 0
+                if (value === '20+') value = 20;
+                else if (value === '' || value === 'Indefinido') value = 0;
+                else value = parseInt(value) || 0;
+            } else if (mappedHeader === 'Idade') {
+                // Converter idade, tratar "Indefinido" e vazios
+                if (value === '' || value === 'Indefinido') value = 0;
+                else value = parseInt(value) || 0;
+            } else if (mappedHeader === 'Altura') {
+                // Converter altura de "1,77m" ou "2m" para centímetros
+                if (value === '' || value === 'Indefinido') {
+                    value = 0;
+                } else if (value.includes('cm')) {
+                    value = parseInt(value.replace('cm', '')) || 0;
+                } else if (value.includes('m')) {
+                    const metros = parseFloat(value.replace('m', '').replace(',', '.')) || 0;
+                    value = Math.round(metros * 100);
+                } else {
+                    value = parseInt(value) || 0;
+                }
+            }
+            
+            obj[mappedHeader] = value;
+        }
+        
+        data.push(obj);
+    }
+    
+    return data;
+}
+
+// Função auxiliar para parsear linha CSV com aspas
+function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        
+        if (char === '"') {
+            inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+            result.push(current.trim());
+            current = '';
+        } else {
+            current += char;
+        }
+    }
+    
+    result.push(current.trim());
+    return result;
 }
 
 // Selecionar personagem do dia (baseado na data)
@@ -151,7 +249,24 @@ function handleAutocomplete() {
     
     sugestoes.forEach(personagem => {
         const div = document.createElement('div');
-        div.textContent = personagem.Nome;
+        div.className = 'autocomplete-item';
+        
+        // Adicionar imagem
+        const img = document.createElement('img');
+        img.src = personagem.Imagem || 'images/placeholder.svg';
+        img.alt = personagem.Nome;
+        img.className = 'autocomplete-img';
+        img.onerror = function() {
+            this.src = 'images/placeholder.svg';
+        };
+        
+        // Adicionar nome
+        const span = document.createElement('span');
+        span.textContent = personagem.Nome;
+        
+        div.appendChild(img);
+        div.appendChild(span);
+        
         div.addEventListener('click', () => {
             guessInput.value = personagem.Nome;
             autocompleteList.innerHTML = '';
@@ -214,6 +329,19 @@ function handleGuess() {
 function adicionarPalpiteAoGrid(personagem) {
     const row = document.createElement('div');
     row.className = 'guess-row';
+    
+    // Adicionar célula da imagem
+    const imgCell = document.createElement('div');
+    imgCell.className = 'grid-cell img-cell';
+    const img = document.createElement('img');
+    img.src = personagem.Imagem || 'images/placeholder.svg';
+    img.alt = personagem.Nome;
+    img.className = 'character-img';
+    img.onerror = function() {
+        this.src = 'images/placeholder.svg';
+    };
+    imgCell.appendChild(img);
+    row.appendChild(imgCell);
     
     // Adicionar célula do nome (sempre visível)
     const nameCell = document.createElement('div');
