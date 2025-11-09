@@ -170,13 +170,17 @@ function carregarEstadoDoJogo() {
             palpitesFeitos = estado.palpites;
             jogoTerminado = estado.jogoTerminado;
             
-            // Restaurar palpites na tela
-            palpitesFeitos.forEach(nomePalpite => {
+            // Restaurar palpites na tela, adicionando na ordem inversa (mais antigos primeiro)
+            // para que o último adicionado (mais recente) fique no topo
+            for (let i = palpitesFeitos.length - 1; i >= 0; i--) {
+                const nomePalpite = palpitesFeitos[i];
                 const personagem = personagens.find(p => p.Nome === nomePalpite);
                 if (personagem) {
-                    adicionarPalpiteAoGrid(personagem);
+                    // Usar insertFirst=false para adicionar na ordem correta (o primeiro será o mais antigo)
+                    // e os próximos serão inseridos antes dele, mantendo a ordem correta
+                    adicionarPalpiteAoGrid(personagem, true);
                 }
-            });
+            }
             
             atualizarTentativas();
             
@@ -320,8 +324,8 @@ function handleGuess() {
     palpitesFeitos.push(personagem.Nome);
     atualizarTentativas();
     
-    // Adicionar ao grid
-    adicionarPalpiteAoGrid(personagem);
+    // Adicionar ao grid (inserindo no início para que o mais recente fique no topo)
+    adicionarPalpiteAoGrid(personagem, true);
     
     // Limpar input
     guessInput.value = '';
@@ -356,7 +360,8 @@ function formatarValorParaExibicao(valor, atributo) {
 }
 
 // Adicionar palpite ao grid
-function adicionarPalpiteAoGrid(personagem) {
+// Se insertFirst for true, insere no início do container (útil para mostrar os mais recentes primeiro)
+function adicionarPalpiteAoGrid(personagem, insertFirst = false) {
     const row = document.createElement('div');
     row.className = 'guess-row';
     
@@ -430,7 +435,12 @@ function adicionarPalpiteAoGrid(personagem) {
         row.appendChild(cell);
     });
     
-    guessesContainer.appendChild(row);
+    // Inserir no início do container para que o mais recente fique no topo
+    if (insertFirst && guessesContainer.firstChild) {
+        guessesContainer.insertBefore(row, guessesContainer.firstChild);
+    } else {
+        guessesContainer.appendChild(row);
+    }
 }
 
 // Atualizar contador de tentativas
