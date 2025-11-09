@@ -71,9 +71,12 @@ function parseCSV(csvText) {
                 else if (value === '' || value === 'Indefinido') value = 0;
                 else value = parseInt(value) || 0;
             } else if (mappedHeader === 'Idade') {
-                // Converter idade, tratar "Indefinido" e vazios
-                if (value === '' || value === 'Indefinido') value = 0;
-                else value = parseInt(value) || 0;
+                // Converter idade:
+                // - "Indefinido" = Infinity (imortal/muito velho, maior que qualquer número)
+                // - "Desconhecido" ou vazio = null (não sabemos)
+                if (value === 'Indefinido') value = Infinity;
+                else if (value === 'Desconhecido' || value === '') value = null;
+                else value = parseInt(value) || null;
             } else if (mappedHeader === 'Altura') {
                 // Converter altura de "1,77m" ou "2m" para centímetros
                 if (value === '' || value === 'Indefinido') {
@@ -173,6 +176,18 @@ function criarCardPersonagem(personagem) {
     const card = document.createElement('div');
     card.className = 'character-card';
     
+    // Formatar valores para exibição
+    let idadeExibicao;
+    if (personagem.Idade === Infinity) {
+        idadeExibicao = 'Indefinido';
+    } else if (personagem.Idade === null) {
+        idadeExibicao = '?';
+    } else {
+        idadeExibicao = personagem.Idade;
+    }
+    const alturaExibicao = personagem.Altura > 0 ? personagem.Altura + ' cm' : '-';
+    const participacoesExibicao = personagem.Participações > 0 ? personagem.Participações : '-';
+    
     card.innerHTML = `
         <div class="character-image">
             <img src="${personagem.Imagem || 'images/placeholder.svg'}" alt="${personagem.Nome}">
@@ -197,15 +212,15 @@ function criarCardPersonagem(personagem) {
             </div>
             <div class="info-row">
                 <span class="info-label">Participações:</span>
-                <span class="info-value">${personagem.Participações}</span>
+                <span class="info-value">${participacoesExibicao}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Idade:</span>
-                <span class="info-value">${personagem.Idade}</span>
+                <span class="info-value">${idadeExibicao}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Altura:</span>
-                <span class="info-value">${personagem.Altura} cm</span>
+                <span class="info-value">${alturaExibicao}</span>
             </div>
         </div>
     `;

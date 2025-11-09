@@ -90,13 +90,16 @@ function parseCSV(csvText) {
                 else if (value === '' || value === 'Indefinido') value = 0;
                 else value = parseInt(value) || 0;
             } else if (mappedHeader === 'Idade') {
-                // Converter idade, tratar "Indefinido" e vazios
-                if (value === '' || value === 'Indefinido') value = 0;
-                else value = parseInt(value) || 0;
+                // Converter idade:
+                // - "Indefinido" = Infinity (imortal/muito velho, maior que qualquer número)
+                // - "Desconhecido" ou vazio = null (não sabemos, não comparar)
+                if (value === 'Indefinido') value = Infinity;
+                else if (value === 'Desconhecido' || value === '') value = null;
+                else value = parseInt(value) || null;
             } else if (mappedHeader === 'Altura') {
                 // Converter altura de "1,77m" ou "2m" para centímetros
-                if (value === '' || value === 'Indefinido') {
-                    value = 0;
+                if (value === '' || value === 'Indefinido' || value === 'Variável') {
+                    value = null;
                 } else if (value.includes('cm')) {
                     value = parseInt(value.replace('cm', '')) || 0;
                 } else if (value.includes('m')) {
@@ -201,6 +204,16 @@ function salvarEstadoDoJogo() {
 // Limpar estado
 function limparEstado() {
     localStorage.removeItem('rpgdle-estado');
+    // Resetar variáveis do jogo
+    tentativas = 0;
+    palpitesFeitos = [];
+    jogoTerminado = false;
+    // Limpar interface
+    guessesContainer.innerHTML = '';
+    atualizarTentativas();
+    // Reabilitar inputs
+    guessInput.disabled = false;
+    guessButton.disabled = false;
 }
 
 // Setup event listeners
@@ -325,6 +338,23 @@ function handleGuess() {
     salvarEstadoDoJogo();
 }
 
+// Formatar valor para exibição
+function formatarValorParaExibicao(valor, atributo) {
+    // Se for Infinity (idade indefinida - imortal), mostrar "Indefinido"
+    if (valor === Infinity) {
+        return 'Indefinido';
+    }
+    // Se for null (idade desconhecida), mostrar "?"
+    if (valor === null) {
+        return '?';
+    }
+    // Se for altura em cm, formatar com "cm"
+    if (atributo === 'Altura' && typeof valor === 'number' && valor > 0) {
+        return valor + 'cm';
+    }
+    return valor;
+}
+
 // Adicionar palpite ao grid
 function adicionarPalpiteAoGrid(personagem) {
     const row = document.createElement('div');
@@ -370,14 +400,15 @@ function adicionarPalpiteAoGrid(personagem) {
         // Comparação
         if (valorPalpite === valorCorreto) {
             cell.classList.add('correto');
-            cell.textContent = valorPalpite;
+            cell.textContent = formatarValorParaExibicao(valorPalpite, atributo);
         } else {
             cell.classList.add('incorreto');
             
             // Para campos numéricos, adicionar setas
-            if (typeof valorPalpite === 'number') {
+            // Mas não adicionar setas se algum dos valores for null (desconhecido)
+            if (typeof valorPalpite === 'number' && valorCorreto !== null && valorPalpite !== null) {
                 const textSpan = document.createElement('span');
-                textSpan.textContent = valorPalpite;
+                textSpan.textContent = formatarValorParaExibicao(valorPalpite, atributo);
                 
                 const arrowSpan = document.createElement('span');
                 arrowSpan.className = 'arrow';
@@ -391,7 +422,8 @@ function adicionarPalpiteAoGrid(personagem) {
                 cell.appendChild(textSpan);
                 cell.appendChild(arrowSpan);
             } else {
-                cell.textContent = valorPalpite;
+                // Se for null ou string, apenas mostrar o valor sem seta
+                cell.textContent = formatarValorParaExibicao(valorPalpite, atributo);
             }
         }
         
