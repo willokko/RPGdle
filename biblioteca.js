@@ -1,11 +1,13 @@
 // Estado da biblioteca
 let personagens = [];
 let rpgSelecionado = 'todos';
+let playerSelecionado = 'todos';
 
 // Elementos do DOM
 const rpgFilter = document.getElementById('rpg-filter');
 const charactersContainer = document.getElementById('characters-container');
 const noCharacters = document.getElementById('no-characters');
+const playerFilter = document.getElementById('player-filter');
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', init);
@@ -13,6 +15,7 @@ document.addEventListener('DOMContentLoaded', init);
 async function init() {
     await carregarPersonagens();
     popularFiltroRPG();
+    popularFiltroPlayer();
     exibirPersonagens();
     setupEventListeners();
 }
@@ -137,10 +140,29 @@ function popularFiltroRPG() {
     });
 }
 
+// Popular filtro de Players
+function popularFiltroPlayer() {
+    // Obter lista única de Players
+    const players = [...new Set(personagens.map(p => p.Player))].sort();
+    
+    // Adicionar opções ao select
+    players.forEach(player => {
+        const option = document.createElement('option');
+        option.value = player;
+        option.textContent = player;
+        playerFilter.appendChild(option);
+    });
+}
+
 // Setup event listeners
 function setupEventListeners() {
     rpgFilter.addEventListener('change', (e) => {
         rpgSelecionado = e.target.value;
+        exibirPersonagens();
+    });
+    
+    playerFilter.addEventListener('change', (e) => {
+        playerSelecionado = e.target.value;
         exibirPersonagens();
     });
 }
@@ -152,8 +174,14 @@ function exibirPersonagens() {
     // Filtrar personagens
     let personagensFiltrados = personagens;
     
+    // Aplicar filtro de RPG
     if (rpgSelecionado !== 'todos') {
-        personagensFiltrados = personagens.filter(p => p.RPG === rpgSelecionado);
+        personagensFiltrados = personagensFiltrados.filter(p => p.RPG === rpgSelecionado);
+    }
+    
+    // Aplicar filtro de Player
+    if (playerSelecionado !== 'todos') {
+        personagensFiltrados = personagensFiltrados.filter(p => p.Player === playerSelecionado);
     }
     
     // Verificar se há personagens
