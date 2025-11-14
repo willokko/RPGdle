@@ -142,11 +142,22 @@ function parseCSVLine(line) {
     return result;
 }
 
-// Selecionar personagem do dia (baseado na data)
+// Selecionar personagem do dia (usando um hash da data para consistência diária)
 function selecionarPersonagemDoDia() {
+    // Usar a data atual para gerar um seed consistente por dia
     const hoje = new Date();
-    const seed = hoje.getFullYear() * 10000 + (hoje.getMonth() + 1) * 100 + hoje.getDate();
-    const index = seed % personagens.length;
+    const dataStr = `${hoje.getFullYear()}-${hoje.getMonth() + 1}-${hoje.getDate()}`;
+    
+    // Função de hash simples para gerar um número pseudo-aleatório a partir da string da data
+    let hash = 0;
+    for (let i = 0; i < dataStr.length; i++) {
+        const char = dataStr.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Converte para inteiro de 32 bits
+    }
+    
+    // Usar o hash para selecionar um personagem
+    const index = Math.abs(hash) % personagens.length;
     return personagens[index];
 }
 
@@ -262,7 +273,7 @@ function handleAutocomplete() {
     
     const sugestoes = personagens
         .filter(p => p.Nome.toLowerCase().includes(valor) && !palpitesFeitos.includes(p.Nome))
-        .slice(0, 5);
+        .slice(0, 20);
     
     sugestoes.forEach(personagem => {
         const div = document.createElement('div');
