@@ -142,22 +142,29 @@ function parseCSVLine(line) {
     return result;
 }
 
-// Selecionar personagem do dia (usando um hash da data para consistência diária)
-function selecionarPersonagemDoDia() {
-    // Usar a data atual para gerar um seed consistente por dia
+// Selecionar personagem do dia (usando hash SHA-256 da data para consistência diária)
+async function selecionarPersonagemDoDia(personagens) {
     const hoje = new Date();
-    const dataStr = `${hoje.getFullYear()}-${hoje.getMonth() + 1}-${hoje.getDate()}`;
-    
-    // Função de hash simples para gerar um número pseudo-aleatório a partir da string da data
-    let hash = 0;
-    for (let i = 0; i < dataStr.length; i++) {
-        const char = dataStr.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash; // Converte para inteiro de 32 bits
-    }
-    
-    // Usar o hash para selecionar um personagem
-    const index = Math.abs(hash) % personagens.length;
+    const dataStr = `${hoje.getFullYear()}-${hoje.getMonth()+1}-${hoje.getDate()}`;
+
+    // Converter string para array de bytes
+    const encoder = new TextEncoder();
+    const data = encoder.encode(dataStr);
+
+    // Criar hash SHA-256
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = new Uint8Array(hashBuffer);
+
+    // Transformar parte do hash em número (32 bits)
+    let seed = (
+        (hashArray[0] << 24) |
+        (hashArray[1] << 16) |
+        (hashArray[2] << 8)  |
+        (hashArray[3])
+    ) >>> 0;
+
+    // Selecionar personagem
+    const index = seed % personagens.length;
     return personagens[index];
 }
 
