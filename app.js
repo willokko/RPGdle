@@ -23,8 +23,20 @@ document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
     await carregarPersonagens();
-    personagemDoDia = selecionarPersonagemDoDia();
-    console.log('Personagem do dia (debug):', personagemDoDia.Nome); // Para debug
+
+    if (!personagens.length) {
+        showMessage('Nenhum personagem disponível para o jogo!', 'error');
+        return;
+    }
+
+    try {
+        personagemDoDia = await selecionarPersonagemDoDia();
+        console.log('Personagem do dia (debug):', personagemDoDia?.Nome); // Para debug
+    } catch (error) {
+        console.error('Erro ao selecionar personagem do dia:', error);
+        showMessage('Erro ao definir o personagem do dia!', 'error');
+        return;
+    }
     
     setupEventListeners();
     carregarEstadoDoJogo();
@@ -143,7 +155,11 @@ function parseCSVLine(line) {
 }
 
 // Selecionar personagem do dia (usando hash SHA-256 da data para consistência diária)
-async function selecionarPersonagemDoDia(personagens) {
+async function selecionarPersonagemDoDia() {
+    if (!Array.isArray(personagens) || personagens.length === 0) {
+        throw new Error('Lista de personagens não carregada');
+    }
+
     const hoje = new Date();
     const dataStr = `${hoje.getFullYear()}-${hoje.getMonth()+1}-${hoje.getDate()}`;
 
