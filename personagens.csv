@@ -10,7 +10,9 @@ Alexandrie,Mulher,Anny,Sétima Folha,Ativo,2,Desconhecido,"1,65m",Alexandrie.jpg
 Alexis,Homem,Will,One Shot do Terrô,Ativo,1,26,"1,80m",Alexis.jpg
 Alexis Voight,Homem,Stefano,Senhor dos Espelhos,Inativo,1,39,"1,71m",Alexis Voight.jpg
 Alexis Zorba,Homem,Victor,Nothing Hill,Ativo,7,17,"1,85m",Alexis Zorba.jpg
-Alice,Mulher,Anny,Pânico RPG,Inativo,2,22,"1,72m",Alice.jpg
+Alfred,Homem,Hugo,Vale dos Heróis,Ativo,1,45,"1,78m",Alfred.jpg
+Alice (S),Homem,Stefano,Infearnium,Ativo,1,26,"1,67m",Alice S.jpg
+Alice (T),Mulher,Anny,Pânico RPG,Inativo,2,22,"1,72m",Alice T.jpg
 Alicia,Mulher,Pedro,Promessa de Galli,Ativo,1,Indefinido,"1,80m",Alicia.jpg
 Amon,Homem,Anthony ,Operação Ruptura,Ativo,1,30,"1,93m",Amon.jpg
 Anahí,Mulher,Anny,Chainsaw Man RPG,Ativo,12,18,"1,75m",Anahí.jpg
@@ -24,11 +26,13 @@ Augusto,Homem,Matheus,Pânico RPG,Inativo,2,20,"1,85m",Augusto.jpg
 Ayla,Mulher,Fernanda,Wilderfeast,Ativo,4,18,"1,70m",Ayla.jpg
 Banzai,Mulher,Anny,Promessa de Galli,Ativo,4,19,"1,70m",Banzai.jpg
 Bellum,Homem,Stefano,Sabres e Caravelas,Ativo,3,24,"1,92m",Bellum.jpg
-Bill,Homem,Stefano,Promessa de Galli,Ativo,5,Indefinido,80cm,Bill.jpg
+Bill,Homem,Stefano,Promessa de Galli,Ativo,5,Indefinido,"0,80m",Bill.jpg
 Bruto,Homem,Stefano,Pokemon RPG,Ativo,20+,16,"1,69m",Bruto.jpg
 Camila,Mulher,Iasmin,Premonição RPG,Inativo,1,20,"1,67m",Camila.jpg
 Carlos,Homem,Rian,This Must Be The Place,Inativo,1,21,"1,77m",Carlos.jpg
 Cassandra,Mulher,Will,Réquiem Profano,Ativo,1,32,"1,90m",Cassandra.jpg
+Catherine,Mulher,Stefano,Expedition33,Ativo,2,20,"1,67m",Catherine.jpg
+Cecília,Mulher,Will,Carniçal RPG,Ativo,2,23,"1,70m",Cecília.jpg
 Chihiro,Mulher,Anny,This Must Be The Place,Ativo,3,19,"1,69m",Chihiro.jpg
 Chillik,Homem,Nathan,Avatar RPG,Ativo,19,19,"1,70m",Chillik.jpg
 Clarice,Mulher,Anny,Assimilação RPG,Inativo,4,25,"1,68m",Clarice.jpg
@@ -39,19 +43,23 @@ Daniel,Homem,Stefano,One Shot do Terrô,Ativo,1,9,"1,30m",Daniel.jpg
 Dario,Homem,Fernanda,Pokemon RPG,Ativo,20+,19,"1,65m",Dario.jpg
 Delta,Homem,Pedro,RPG 2,Ativo,3,Indefinido,"2,16m",Delta.jpg
 Derek,Homem,João,This Must Be The Place,Ativo,1,12,"1,57m",Derek.jpg
+Diego,Homem,Rennan,Carniçal RPG,Ativo,1,23,"1,83m",Diego.jpg
 Dília,Mulher,Wyne,Wilderfeast,Inativo,1,19,"1,62m",Dília.jpg
-Doctor R,Homem,Raul,Dr. Who?,Ativo,2,Indefinido,"1,83m",Doctor R.jpg
-Doctor S,Homem,Stefano,Dr. Who?,Ativo,1,Indefinido,"1,95m",DoctorS.jpg
+Doctor (R),Homem,Raul,Dr. Who?,Ativo,2,Indefinido,"1,83m",Doctor R.jpg
+Doctor (S),Homem,Stefano,Dr. Who?,Ativo,1,Indefinido,"1,95m",DoctorS.jpg
 Doll,Homem,Rennan,Sétima Folha,Ativo,2,2,"1,65m",Doll.jpg
 Donatello,Homem,Will,Chainsaw Man RPG,Ativo,13,18,"1,63m",Donatello.jpg
 Dr Frank,Homem,João,Expedição³,Ativo,20+,19,"1,85m",Dr Frank.jpg
 Draco D Gyro,Homem,Victor,Two Piece Temp 2,Ativo,4,31,"1,68m",Draco D Gyro.jpg
 Draven,Homem,Anthony,Réquiem Profano,Ativo,1,19,"1,78m",Draven.jpg
 Drax,Homem,Rennan,Expedição³,Inativo,6,18,"1,73m",Drax.jpg
+Duke,Homem,Clara,Infearnium,Ativo,1,30,"1,85m",Duke.jpg
 Edgar,Homem,Pedro,Pokemon RPG,Ativo,20+,25,"1,85m",Edgar.jpg
 Edith,Mulher,Hugo,Sétima Folha,Ativo,4,24,"1,85m",Edith.jpg
+Édouard,Homem,Rennan,Expedition33,Ativo,1,25,"1,81m",Edouard.jpg
 Eduarda,Mulher,Matheus,One Shot do Terrô,Ativo,1,19,"1,60m",Eduarda.jpg
 Emanuelle,Mulher,Will,Promessa de Galli,Ativo,5,25,"1,85m",Emanuelle.jpg
+Enji,Homem,Rennan,Pokemon RPG,Ativo,1,19,"1,76m",Enji.jpg
 Eric Jung,Homem,João,Assimilação RPG,Inativo,1,55,"1,72m",Eric Jung.jpg
 Erick Ferinha,Homem,Nathan,Nothing Hill,Ativo,7,18,"1,70m",Erick Ferinha.jpg
 Eris,Indefinido,Anny,Yu-Gi-Oh,Inativo,20+,Desconhecido,"1,55m",Eris.jpg
@@ -63,6 +71,7 @@ Ezequiel,Homem,Raul,Promessa de Galli,Ativo,4,20,"1,75m",Ezequiel.jpg
 Felix,Homem,Nathan,Wilderfeast,Ativo,6,22,"1,61m",Felix.jpg
 Ferbos,Homem,Nathan,Expedição³,Ativo,20+,22,"1,69m",Ferbos.jpg
 Finire,Homem,Nathan,Promessa de Galli,Ativo,5,30,"1,79m",Finire.jpg
+Fiodor,Homem,Rennan,Sabres e Caravelas,Ativo,1,28,"1,75m",Fiodor.jpg
 Fleark,Homem,Rennan,Two Piece Temp 1,Ativo,1,40,"2,50m",Fleark.jpg
 Free,Homem,João,Wesens,Ativo,1,24,"1,65m",Free.jpg
 Gael,Homem,Rennan,Missão Epílogo,Inativo,2,20,"1,75m",Gael.jpg
@@ -74,17 +83,21 @@ Hanzo,Homem,Stefano,Two Piece Temp 1,Ativo,3,27,"1,75m",Hanzo.jpg
 Harry,Homem,Anny,Two Piece Temp 2,Ativo,6,Desconhecido,"1,50m",Harry.jpg
 Hayato,Homem,Anny,Wilderfeast,Ativo,3,20,"1,90m",Hayato.jpg
 Henrique,Homem,Fernanda,Missão Epílogo,Inativo,2,23,"1,75m",Henrique.jpg
-Hestes,Homem,Pedro,Vale dos Heróis,Ativo,2,35,"1,90m",Hestes.jpg
+Hestes,Homem,Pedro,Vale dos Heróis,Ativo,3,35,"1,90m",Hestes.jpg
 Higan,Homem,Stefano,Wilderfeast,Ativo,8,20,"1,90m",Higan.jpg
+Hunter,Homem,Gugu,Sétima Folha,Ativo,1,21,"1,90m",Hunter.jpg
 Ibisco,Homem,Nathan,Yu-Gi-Oh,Ativo,15,25,"1,74m",Ibisco.jpg
 Isabella,Mulher,Fernanda,Pânico RPG,Inativo,1,22,"1,67m",Isabella.jpg
 Jack,Homem,Raul,Assimilação RPG,Inativo,4,26,"1,89m",Jack.jpg
 Jacob,Homem,João,Operação Ruptura,Ativo,1,22,"1,84m",Jacob.jpg
 Jaden,Homem,Anny,Pokemon RPG,Ativo,20+,21,"1,75m",Jaiden.jpg
-Jasper,Homem,Raul,Vale dos Heróis,Ativo,2,Desconhecido,"1,85m",Jasper.jpg
-João,Homem,Will,Assimilação RPG,Ativo,13,Indefinido,"1,70m",João.jpg
-John,Homem,Kauê,Assimilação RPG,Ativo,2,40,"1,90m",John.jpg
+Jasper,Homem,Raul,Vale dos Heróis,Ativo,3,Desconhecido,"1,85m",Jasper.jpg
 Jhonny Tail,Homem,João,Pokemon RPG,Ativo,20+,14,"1,61m",Johnny Tail.jpg
+João,Homem,Will,Assimilação RPG,Inativo,13,Indefinido,"1,70m",João.jpg
+João Neto,Homem,Pedro,Carniçal RPG,Ativo,1,23,"1,75m",João Neto.jpg
+João Nóbrega,Homem,Raul,Carniçal RPG,Ativo,2,63,"1,82m",João Nóbrega.jpg
+João Rennan,Homem,Tutu,Carniçal RPG,Ativo,1,19,"1,72m",João Rennan.jpg
+John,Homem,Kauê,Assimilação RPG,Inativo,2,40,"1,90m",John.jpg
 Jorge,Homem,Rian,Chainsaw Man RPG,Ativo,1,37,"1,78m",Jorge.jpg
 José Manoel,Homem,João,Premonição RPG,Ativo,1,18,"1,80m",José Manoel.jpg
 Jota,Homem,Victor,Fear Of Unknown,Ativo,1,25,"1,56m",Jota.jpg
@@ -93,31 +106,36 @@ Kadu,Homem,Rennan,Wilderfeast,Ativo,2,14,"1,59m",Kadu.jpg
 Kaleb,Homem,Rennan,Pokemon RPG,Ativo,2,19,"1,69m",Kaleb.jpg
 Kayra,Mulher,Ana Paula,Pânico RPG,Inativo,1,24,"1,69m",Kayra.jpg
 Kenshin,Homem,Fernanda,Avatar RPG,Ativo,16,20,"1,77m",Kenshin.jpg
-Leandro,Homem,Stefano,Assimilação RPG,Ativo,2,31,"1,87m",Leandro.jpg
+Leandro,Homem,Stefano,Assimilação RPG,Ativo,2,72,"1,87m",Leandro.jpg
 Lenore,Mulher,Fernanda,Réquiem Profano,Ativo,1,26,"1,84m",Lenore.jpg
 Leonard,Homem,Anthony ,Assimilação RPG,Ativo,6,17,"1,80m",Leonard.jpg
 Leonardo,Homem,Rennan,Chainsaw Man RPG,Inativo,2,28,"1,80m",Leonardo.jpg
 Leorio,Homem,Stefano,Assimilação RPG,Inativo,9,27,"1,76m",Leorio.jpg
-Luca,Homem,Emanuel,Wilderfeast,Ativo,5,24,1m,Luca.jpg
+Luca,Homem,Emanuel,Wilderfeast,Ativo,5,24,"1,00m",Luca.jpg
 Lucas,Homem,Will,Pânico RPG,Inativo,2,21,"1,75m",Lucas.jpg
 Lucio,Homem,Stefano,Assimilação RPG,Ativo,2,34,"1,71m",Lucio.jpg
+Lucius,Homem,Pedro,Expedition33,Ativo,2,25,"1,75m",Lucius.jpg
 Lura,Homem,Raul,Yu-Gi-Oh,Ativo,20+,21,"1,70m",Lura.jpg
-Mabel,Mulher,Will,Vale dos Heróis,Ativo,2,30,"1,65m",Mabel.jpg
-Macz,Homem,Stefano,Two Piece Temp 2,Ativo,8,27,2m,Macz.jpg
+Mabel,Mulher,Will,Vale dos Heróis,Ativo,3,30,"1,65m",Mabel.jpg
+Macz,Homem,Stefano,Two Piece Temp 2,Ativo,8,27,"2,00m",Macz.jpg
+Madeline,Mulher,Clara,Expedition33,Ativo,2,22,"1,65m",Madeline.jpg
 Maikon,Homem,Nathan,Pokemon RPG,Ativo,10,18,"1,72m",Maikon.jpg
+Manoela,Mulher,Stefano,Carniçal RPG,Ativo,2,18,"1,60m",Manoela.jpg
 Marco,Homem,Will,This Must Be The Place,Ativo,3,21,"1,80m",Marco.jpg
+Marie Claire,Mulher,Will,Expedition33,Ativo,2,33,"1,60m",Marie Claire.jpg
 Mateo,Homem,Fernanda,Yu-Gi-Oh,Inativo,18,18,"1,78m",Mateo.jpg
 Mathias,Homem,Nathan,Pânico RPG,Inativo,2,18,"1,68m",Mathias.jpg
 Matteo,Homem,Rennan,Promessa de Galli,Ativo,1,22,"1,79m",Matteo.jpg
+Maxime,Homem,Hugo,Expedition33,Ativo,2,27,"1,83m",Maxime.jpg
 Maxwell,Homem,Victor,Promessa de Galli,Ativo,2,53,"1,78m",Maxwell.jpg
 Mel,Mulher,Hugo,Réquiem Profano,Ativo,1,24,"1,65m",Mel.jpg
 Melir,Homem,Raul,RPG 2,Ativo,6,34,"1,85m",Melir.jpg
 Michelangelo,Homem,João,Chainsaw Man RPG,Ativo,11,21,"1,60m",Michelangelo.jpg
 Mike Sprinter,Homem,Matheus,Two Piece Temp 1,Inativo,8,20,"1,75m",Mike Sprinter.jpg
-Milo,Homem,Fernanda,Vale dos Heróis,Ativo,1,22,"1,74m",Milo.jpg
-Milo Milo,Homem,Rennan,Two Piece Temp 2,Ativo,2,15,30cm,Milo Milo.jpg
+Milo,Homem,Fernanda,Vale dos Heróis,Ativo,2,22,"1,74m",Milo.jpg
+Milo Milo,Homem,Rennan,Two Piece Temp 2,Ativo,2,15,"0,30m",Milo Milo.jpg
 Mitsuya D. Hades,Homem,Matheus,Two Piece Temp 2,Ativo,10,19,"1,80m",Mitsuya D Hades.jpg
-Mordecay,Homem,Stefano,Vale dos Heróis,Ativo,2,26,"1,81m",Mordecay.jpg
+Mordecay,Homem,Stefano,Vale dos Heróis,Ativo,3,26,"1,81m",Mordecay.jpg
 Mórigan,Indefinido,Anny,Sabres e Caravelas,Ativo,3,Desconhecido,"1,85m",Mórigan.jpg
 Murraça,Homem,João,One Shot do Terrô,Ativo,1,29,"1,95m",Murraça.jpg
 Myro,Homem,Ana Paula,Wilderfeast,Ativo,1,102,"1,40m",Myro.jpg
@@ -125,15 +143,16 @@ Nai Jang,Mulher,Stefano,This Must Be The Place,Ativo,3,24,"1,66m",Nai Jang.jpg
 Nando,Homem,Raul,Pânico RPG,Ativo,2,22,"1,76m",Nando.jpg
 Natália,Mulher,Fernanda,Assimilação RPG,Inativo,4,23,"1,59m",Natália.jpg
 Nayr,Homem,Hugo,Missão Epílogo,Ativo,2,39,"1,78m",Nayr.jpg
-Neto,Homem,Hugo,Assimilação RPG,Ativo,4,22,"1,70m",Neto.jpg
-Nicole,Mulher,Fernanda,Assimilação RPG,Ativo,2,19,"1,66m",Nicole.jpg
-Nikos,Homem,Anny,Vale dos Heróis,Ativo,2,Desconhecido,"1,56m",Nikos.jpg
+Neto,Homem,Hugo,Assimilação RPG,Inativo,4,22,"1,70m",Neto.jpg
+Nicole,Mulher,Fernanda,Assimilação RPG,Inativo,2,19,"1,66m",Nicole.jpg
+Nikos,Homem,Anny,Vale dos Heróis,Ativo,3,Desconhecido,"1,56m",Nikos.jpg
 Nuan,Homem,Raul,Avatar RPG,Ativo,19,21,"1,80m",Nuan.jpg
+Olivier,Homem,Raul,Expedition33,Ativo,2,33,"1,84m",Olivier.jpg
 Otaner,Homem,Nathan,One Shot do Terrô,Ativo,1,36,"1,75m",Otaner.jpg
-Pedro-Quinze,Homem,João,Assimilação RPG,Inativo,3,45,2m,Pedro-Quinze.jpg
+Pedro-Quinze,Homem,João,Assimilação RPG,Inativo,3,45,"2,00m",Pedro-Quinze.jpg
 Petrick,Homem,Stefano,Sétima Folha,Ativo,3,67,"1,75m",Petrick.jpg
 Petrovan,Homem,Nathan,Operação Ruptura,Ativo,1,49,"2,01m",Petrovan.jpg
-Prince,Homem,Nathan,Vale dos Heróis,Ativo,1,24,"1,65m",Prince.jpg
+Prince,Homem,Nathan,Vale dos Heróis,Ativo,3,24,"1,65m",Prince.jpg
 Rael,Homem,Lourenço,Premonição RPG,Inativo,1,24,"1,85m",Rael.jpg
 Rafael,Homem,Nathan,Chainsaw Man RPG,Ativo,2,20,"1,77m",Rafael.jpg
 Rafael Shirondinger,Homem,Nathan,Two Piece Temp 1,Ativo,4,52,"1,68m",Rafael Schrodinger.jpg
@@ -146,6 +165,7 @@ Salazar,Homem,Pedro,Chainsaw Man RPG,Ativo,9,21,"1,75m",Salazar.jpg
 Samsara,Mulher,João,Wilderfeast,Ativo,4,17,"1,70m",Samsara.jpg
 Serena,Mulher,Lourenço,Wilderfeast,Ativo,5,22,"1,50m",Serena.jpg
 Sirion,Indefinido,Fernanda,Sabres e Caravelas,Ativo,3,24,"1,94m",Sirion.jpg
+Sophie,Mulher,Ana Paula,Expedition33,Ativo,2,23,"1,79m",Sophie.jpg
 Soren,Homem,Pedro,This Must Be The Place,Ativo,3,33,"1,90m",Soren.jpg
 Tai Long,Homem,Stefano,Two Piece Temp 1,Inativo,4,21,"1,77m",Tai Long.jpg
 Tarley,Homem,Rian,Pokemon RPG,Ativo,10,19,"1,70m",Tarley.jpg
@@ -158,6 +178,7 @@ Tobia,Homem,Raul,This Must Be The Place,Ativo,3,23,"1,78m",Tobia.jpg
 Tristan,Homem,Will,RPG 2,Ativo,6,109,"3,00m",Tristan.jpg
 Tutu,Homem,Hugo,Wilderfeast,Ativo,4,17,"1,65m",Tutu.jpg
 Uriel Felix,Indefinido,Will,Sabres e Caravelas,Ativo,3,100,"1,70m",Uriel Felix.jpg
+Valtr,Homem,Hugo,Infearnium,Ativo,1,41,"1,73m",Valtr.jpg
 Velho,Homem,Stefano,Fear Of Unknown,Ativo,2,61,"1,74m",Velho.jpg
 Versalhes,Homem,Raul,Sabres e Caravelas,Ativo,3,29,"1,80m",Versalhes.jpg
 Vini,Homem,Stefano,RPG 2,Ativo,6,33,"1,65m",Vini.jpg
@@ -166,14 +187,6 @@ Vlad,Homem,Ana Paula,RPG 2,Ativo,1,500,"1,90m",Vlad.jpg
 Wei Lee,Mulher,Wyne,Avatar RPG,Ativo,19,19,"1,70m",Wei Lee.jpg
 Wei Wei,Homem,Will,Avatar RPG,Ativo,19,19,"1,70m",Wei Wei.jpg
 William,Homem,Matheus,Assimilação RPG,Ativo,12,21,"1,77m",William.jpg
-Yeshua,Homem,João,Vale dos Heróis,Ativo,1,50,"1,65m",Yeshua.jpg
-Yme,Mulher,Emily,Vale dos Heróis,Ativo,2,25,"1,60m",Yme.jpg
+Yeshua,Homem,João,Vale dos Heróis,Inativo,1,50,"1,65m",Yeshua.jpg
+Yme,Mulher,Emily,Vale dos Heróis,Ativo,3,25,"1,60m",Yme.jpg
 Zeisho,Homem,Anny,RPG 2,Ativo,6,Desconhecido,Variável,Zeisho.jpg
-Marie Claire,Mulher,Will,Expedition33,Ativo,2,33,"1,60m",Marie Claire.jpg
-Sophie,Mulher,Ana Paula,Expedition33,Ativo,2,23,"1,79m",Sophie.jpg
-Olivier,Homem,Raul,Expedition33,Ativo,2,33,"1,84m",Olivier.jpg
-Catherine,Mulher,Stefano,Expedition33,Ativo,2,20,"1,67m",Catherine.jpg
-Lucius,Homem,Pedro,Expedition33,Ativo,2,25,"1,75m",Lucius.jpg
-Édouard,Homem,Rennan,Expedition33,Ativo,1,25,"1,81m",Edouard.jpg
-Madeline,Mulher,Clara,Expedition33,Ativo,2,22,"1,65m",Madeline.jpg
-Maxime,Homem,Hugo,Expedition33,Ativo,2,27,"1,83m",Maxime.jpg
