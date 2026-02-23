@@ -1,8 +1,8 @@
 Personagem,Gênero,Player,RPG,Status,Participações,Idade,Altura,Imagem
-Adam,Homem,Rian,Promessa de Galli,Ativo,1,19,"1,69m",Adam.jpg
+Adam,Homem,Rian,Promessa de Galli,Inativo,1,19,"1,69m",Adam.jpg
 Akira,Homem,Victor,Pokemon RPG,Ativo,1,15,"1,62m",Akira.jpg
 Albuquerque,Homem,Rennan,Pânico RPG,Inativo,1,41,"1,80m",Albuquerque.jpg
-Aldrich,Indefinido,Fernanda,Promessa de Galli,Ativo,2,29,"1,80m",Aldrich.jpg
+Aldrich,Indefinido,Fernanda,Promessa de Galli,Ativo,3,29,"1,80m",Aldrich.jpg
 Alemão,Homem,Rian,Yu-Gi-Oh,Inativo,15,28,"1,85m",Alemão.jpg
 Alessandro,Homem,Victor,Expedição³,Ativo,20+,25,"1,71m",Alessandro.jpg
 Alexandre,Homem,Will,Missão Epílogo,Inativo,2,33,"1,80m",Alexandre.jpg
@@ -14,7 +14,7 @@ Alexis Zorba,Homem,Victor,Nothing Hill,Ativo,7,17,"1,85m",Alexis Zorba.jpg
 Alfred,Homem,Hugo,Vale dos Heróis,Ativo,1,45,"1,78m",Alfred.jpg
 Alice (S),Homem,Stefano,Infearnium,Ativo,2,26,"1,60m",Alice S.jpg
 Alice (T),Mulher,Tutu,Pânico RPG,Inativo,2,22,"1,72m",Alice T.jpg
-Alicia,Mulher,Pedro,Promessa de Galli,Ativo,1,Indefinido,"1,80m",Alicia.jpg
+Alicia,Mulher,Pedro,Promessa de Galli,Inativo,2,Indefinido,"1,80m",Alicia.jpg
 Amon,Homem,Anthony ,Operação Ruptura,Ativo,1,30,"1,93m",Amon.jpg
 Anahí,Mulher,Tutu,Chainsaw Man RPG,Ativo,18,18,"1,75m",Anahí.jpg
 André,Homem,Nathan,Assimilação RPG,Inativo,11,22,"1,91m",André.jpg
@@ -27,10 +27,10 @@ Atlas,Mulher,Fernanda,Fear Of Unknown,Ativo,2,21,"1,66m",Atlas.jpg
 Augusto,Homem,Matheus,Pânico RPG,Inativo,2,20,"1,85m",Augusto.jpg
 Ayla,Mulher,Fernanda,Wilderfeast,Ativo,4,18,"1,70m",Ayla.jpg
 Azik,Homem,Anthony,Sacrilégio,Ativo,1,24,"1,85m",Azik.jpg
-Banzai,Mulher,Tutu,Promessa de Galli,Ativo,4,19,"1,70m",Banzai.jpg
+Banzai,Mulher,Tutu,Promessa de Galli,Inativo,5,19,"1,70m",Banzai.jpg
 Bellum,Homem,Stefano,Sabres e Caravelas,Ativo,9,24,"1,92m",Bellum.jpg
 Bia,Mulher,Raul,Pânico RPG 2,Inativo,1,21,"1,76m",Bia.jpg
-Bill,Homem,Stefano,Promessa de Galli,Ativo,5,Indefinido,"0,80m",Bill.jpg
+Bill,Homem,Stefano,Promessa de Galli,Inativo,6,Indefinido,"0,80m",Bill.jpg
 Bruto,Homem,Stefano,Pokemon RPG,Ativo,20+,16,"1,69m",Bruto.jpg
 Camila,Mulher,Iasmin,Premonição RPG,Inativo,1,20,"1,67m",Camila.jpg
 Carlos,Homem,Rian,This Must Be The Place,Inativo,1,21,"1,77m",Carlos.jpg
@@ -63,7 +63,7 @@ Edgar,Homem,Pedro,Pokemon RPG,Ativo,20+,25,"1,85m",Edgar.jpg
 Edith,Mulher,Hugo,Sétima Folha,Ativo,6,24,"1,85m",Edith.jpg
 Édouard,Homem,Rennan,Expedition33,Ativo,4,25,"1,81m",Edouard.jpg
 Eduarda,Mulher,Matheus,One Shot do Terrô,Ativo,1,19,"1,60m",Eduarda.jpg
-Emanuelle,Mulher,Will,Promessa de Galli,Ativo,5,25,"1,85m",Emanuelle.jpg
+Emanuelle,Mulher,Will,Promessa de Galli,Ativo,6,25,"1,85m",Emanuelle.jpg
 Enji,Homem,Rennan,Pokemon RPG,Ativo,1,19,"1,76m",Enji.jpg
 Eric Jung,Homem,João,Assimilação RPG,Inativo,1,55,"1,72m",Eric Jung.jpg
 Erica,Mulher,Pedro,Pânico RPG 2,Inativo,1,23,"1,76m",Erica.jpg
@@ -73,10 +73,10 @@ Estevão,Homem,Rian,Pânico RPG,Inativo,2,23,"1,80m",Estevão.jpg
 Ethan,Homem,Stefano,Wesens,Ativo,1,26,"1,67m",Ethan.jpg
 Eustass,Homem,João,Fear Of Unknown,Ativo,2,25,"1,90m",Eustass.jpg
 Evangeline,Mulher,Lourenço,Sétima Folha,Ativo,6,35,"1,68m",Evangeline.jpg
-Ezequiel,Homem,Raul,Promessa de Galli,Ativo,4,20,"1,75m",Ezequiel.jpg
+Ezequiel,Homem,Raul,Promessa de Galli,Inativo,5,20,"1,75m",Ezequiel.jpg
 Felix,Homem,Nathan,Wilderfeast,Ativo,6,22,"1,61m",Felix.jpg
 Ferbos,Homem,Nathan,Expedição³,Ativo,20+,22,"1,69m",Ferbos.jpg
-Finire,Homem,Nathan,Promessa de Galli,Ativo,5,30,"1,79m",Finire.jpg
+Finire,Homem,Nathan,Promessa de Galli,Inativo,6,30,"1,79m",Finire.jpg
 Fiodor,Homem,Rennan,Sabres e Caravelas,Ativo,1,28,"1,75m",Fiodor.jpg
 Fleark,Homem,Rennan,Two Piece Temp 1,Ativo,1,40,"2,50m",Fleark.jpg
 Free,Homem,João,Wesens,Ativo,1,24,"1,65m",Free.jpg
@@ -139,9 +139,9 @@ Marco,Homem,Will,This Must Be The Place,Ativo,3,21,"1,80m",Marco.jpg
 Marie Claire,Mulher,Will,Expedition33,Ativo,7,33,"1,60m",Marie Claire.jpg
 Mateo,Homem,Fernanda,Yu-Gi-Oh,Inativo,18,18,"1,78m",Mateo.jpg
 Mathias,Homem,Nathan,Pânico RPG,Inativo,2,18,"1,68m",Mathias.jpg
-Matteo,Homem,Rennan,Promessa de Galli,Ativo,1,22,"1,79m",Matteo.jpg
+Matteo,Homem,Rennan,Promessa de Galli,Inativo,1,22,"1,79m",Matteo.jpg
 Maxime,Homem,Hugo,Expedition33,Ativo,7,27,"1,83m",Maxime.jpg
-Maxwell,Homem,Victor,Promessa de Galli,Ativo,2,53,"1,78m",Maxwell.jpg
+Maxwell,Homem,Victor,Promessa de Galli,Inativo,3,53,"1,78m",Maxwell.jpg
 Mel,Mulher,Hugo,Réquiem Profano,Ativo,3,24,"1,65m",Mel.jpg
 Melir,Homem,Raul,RPG 2,Ativo,6,34,"1,85m",Melir.jpg
 Michelangelo,Homem,João,Chainsaw Man RPG,Ativo,12,21,"1,60m",Michelangelo.jpg
