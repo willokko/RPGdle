@@ -279,6 +279,7 @@ nav {
     overflow-x: auto;
     overflow-y: visible;
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
     padding-bottom: 10px;
     position: relative;
     width: 100%;
@@ -291,18 +292,7 @@ nav {
 /* Indicador de scroll horizontal */
 @media (max-width: 768px) {
     .game-grid::after {
-        content: '→';
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        background: linear-gradient(to left, rgba(255,255,255,0.95), transparent);
-        padding: 10px 15px 10px 30px;
-        font-size: 1.5em;
-        color: #667eea;
-        pointer-events: none;
-        opacity: 0.7;
-        animation: slideHint 2s ease-in-out infinite;
+        display: none;
     }
 }
 
@@ -331,7 +321,7 @@ nav {
 
 .grid-header {
     display: grid;
-    grid-template-columns: 80px 140px repeat(7, minmax(100px, 1fr));
+    grid-template-columns: 80px 140px repeat(7, minmax(120px, 1fr));
     gap: 8px;
     margin-bottom: 10px;
     min-width: min-content;
@@ -362,6 +352,12 @@ nav {
     padding: 12px 10px;
     width: 140px;
     max-width: 140px;
+}
+
+.grid-cell.header {
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.2;
 }
 
 .grid-cell.img-cell {
@@ -749,7 +745,7 @@ footer {
 
     .grid-header,
     .guess-row {
-        grid-template-columns: 70px 110px repeat(7, minmax(90px, 1fr));
+        grid-template-columns: 70px 130px repeat(7, minmax(110px, 1fr));
         gap: 6px;
     }
 
@@ -765,8 +761,8 @@ footer {
     }
 
     .grid-cell.name-cell {
-        width: 110px;
-        max-width: 110px;
+        width: 130px;
+        max-width: 130px;
         font-size: 0.85em;
         white-space: normal;
     }
@@ -861,7 +857,7 @@ footer {
 
     .grid-header,
     .guess-row {
-        grid-template-columns: 60px 90px repeat(7, minmax(75px, 1fr));
+        grid-template-columns: 60px 100px repeat(7, minmax(90px, 1fr));
         gap: 5px;
     }
 
@@ -877,8 +873,8 @@ footer {
     }
 
     .grid-cell.name-cell {
-        width: 90px;
-        max-width: 90px;
+        width: 100px;
+        max-width: 100px;
         font-size: 0.8em;
         padding: 8px 6px;
         white-space: normal;
@@ -889,6 +885,8 @@ footer {
         height: 60px;
         font-size: 0.75em;
         padding: 8px 5px;
+        white-space: normal;
+        word-break: break-word;
     }
 
     .autocomplete-img {
