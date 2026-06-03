@@ -11,7 +11,7 @@ html {
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-    background-attachment: fixed;
+    background-attachment: scroll;
     min-height: 100vh;
     padding: 10px;
     color: #e0e0e0;
@@ -331,7 +331,7 @@ nav {
 
 .grid-header {
     display: grid;
-    grid-template-columns: 80px 120px repeat(7, 90px);
+    grid-template-columns: 80px 140px repeat(7, minmax(100px, 1fr));
     gap: 8px;
     margin-bottom: 10px;
     min-width: min-content;
@@ -358,9 +358,10 @@ nav {
     font-size: 0.9em;
     text-overflow: ellipsis;
     overflow: hidden;
-    white-space: nowrap;
+    white-space: normal;
     padding: 12px 10px;
-    width: 120px;
+    width: 140px;
+    max-width: 140px;
 }
 
 .grid-cell.img-cell {
@@ -400,7 +401,7 @@ nav {
 
 .guess-row {
     display: grid;
-    grid-template-columns: 80px 120px repeat(7, 90px);
+    grid-template-columns: 80px 140px repeat(7, minmax(100px, 1fr));
     gap: 8px;
     margin-bottom: 10px;
     animation: slideIn 0.5s ease;
@@ -739,18 +740,23 @@ footer {
 
     .game-grid {
         margin-bottom: 20px;
+        overflow-x: auto;
     }
 
-    /* Grid mantém tamanhos fixos em mobile com scroll horizontal */
+    .game-grid::after {
+        display: block;
+    }
+
     .grid-header,
     .guess-row {
-        grid-template-columns: 70px 100px repeat(7, 85px);
+        grid-template-columns: 70px 110px repeat(7, minmax(90px, 1fr));
         gap: 6px;
     }
 
     .grid-cell.img-cell {
         width: 70px;
         min-width: 70px;
+        padding: 6px;
     }
 
     .character-img {
@@ -759,8 +765,10 @@ footer {
     }
 
     .grid-cell.name-cell {
-        width: 100px;
+        width: 110px;
+        max-width: 110px;
         font-size: 0.85em;
+        white-space: normal;
     }
 
     .grid-cell {
@@ -768,6 +776,10 @@ footer {
         height: 65px;
         font-size: 0.8em;
         padding: 10px 6px;
+    }
+
+    .grid-cell.header {
+        font-size: 0.7em;
     }
 
     .characters-grid {
@@ -838,10 +850,18 @@ footer {
         font-size: 0.95em;
     }
 
-    /* Grid mantém tamanhos fixos com scroll horizontal */
+    .game-grid {
+        margin-bottom: 18px;
+        overflow-x: auto;
+    }
+
+    .game-grid::after {
+        display: block;
+    }
+
     .grid-header,
     .guess-row {
-        grid-template-columns: 60px 90px repeat(7, 75px);
+        grid-template-columns: 60px 90px repeat(7, minmax(75px, 1fr));
         gap: 5px;
     }
 
@@ -858,8 +878,10 @@ footer {
 
     .grid-cell.name-cell {
         width: 90px;
+        max-width: 90px;
         font-size: 0.8em;
         padding: 8px 6px;
+        white-space: normal;
     }
 
     .grid-cell {

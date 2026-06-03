@@ -154,24 +154,31 @@ function parseCSVLine(line) {
     return result;
 }
 
+const RECENTE_DIAS = 100;
+const HISTORICO_KEY = 'rpgdle-historico-personagens';
+
 // Selecionar personagem do dia (usando hash SHA-256 da data para consistência diária)
 async function selecionarPersonagemDoDia() {
     if (!Array.isArray(personagens) || personagens.length === 0) {
         throw new Error('Lista de personagens não carregada');
     }
 
-    const hoje = new Date();
-    const dataStr = `${hoje.getFullYear()}-${hoje.getMonth()+1}-${hoje.getDate()}`;
+    const dataAtual = getDataAtual();
+    const historico = limparHistoricoAntigo(carregarHistoricoPersonagensUsados());
+    const registroHoje = historico.find(entry => entry.data === dataAtual);
 
-    // Converter string para array de bytes
+    if (registroHoje) {
+        const personagemExistente = personagens.find(p => p.Nome === registroHoje.nome);
+        if (personagemExistente) {
+            return personagemExistente;
+        }
+    }
+
     const encoder = new TextEncoder();
-    const data = encoder.encode(dataStr);
-
-    // Criar hash SHA-256
-    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const data = encoder.encode(dataAtual);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
     const hashArray = new Uint8Array(hashBuffer);
 
-    // Transformar parte do hash em número (32 bits)
     let seed = (
         (hashArray[0] << 24) |
         (hashArray[1] << 16) |
@@ -179,15 +186,52 @@ async function selecionarPersonagemDoDia() {
         (hashArray[3])
     ) >>> 0;
 
-    // Selecionar personagem
     const index = seed % personagens.length;
-    return personagens[index];
+    const nomesRecentes = new Set(historico.map(entry => entry.nome));
+
+    let personagemSelecionado = personagens[index];
+    if (nomesRecentes.has(personagemSelecionado.Nome) && nomesRecentes.size < personagens.length) {
+        for (let offset = 1; offset < personagens.length; offset++) {
+            const i = (index + offset) % personagens.length;
+            const candidato = personagens[i];
+            if (!nomesRecentes.has(candidato.Nome)) {
+                personagemSelecionado = candidato;
+                break;
+            }
+        }
+    }
+
+    historico.push({ data: dataAtual, nome: personagemSelecionado.Nome });
+    salvarHistoricoPersonagensUsados(limparHistoricoAntigo(historico));
+
+    return personagemSelecionado;
 }
 
 // Obter data atual (formato YYYY-MM-DD)
 function getDataAtual() {
     const hoje = new Date();
     return hoje.toISOString().split('T')[0];
+}
+
+function carregarHistoricoPersonagensUsados() {
+    try {
+        const raw = localStorage.getItem(HISTORICO_KEY);
+        return raw ? JSON.parse(raw) : [];
+    } catch (error) {
+        console.warn('Histórico de personagens usado inválido, reiniciando.', error);
+        return [];
+    }
+}
+
+function salvarHistoricoPersonagensUsados(historico) {
+    localStorage.setItem(HISTORICO_KEY, JSON.stringify(historico));
+}
+
+function limparHistoricoAntigo(historico) {
+    const limite = new Date();
+    limite.setDate(limite.getDate() - RECENTE_DIAS);
+    const limiteStr = limite.toISOString().split('T')[0];
+    return historico.filter(entry => entry.data >= limiteStr);
 }
 
 // Carregar estado do jogo do localStorage
