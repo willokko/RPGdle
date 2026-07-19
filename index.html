@@ -14,15 +14,18 @@
             <nav>
                 <a href="biblioteca.html" class="nav-link">Biblioteca de Personagens</a>
             </nav>
+            <div class="mode-tabs">
+                <button id="normal-mode-button" class="mode-button active" type="button">Normal</button>
+                <button id="easy-mode-button" class="mode-button" type="button">Fácil</button>
+            </div>
+            <p id="mode-description" class="mode-description">Modo Normal: todos os personagens entram no sorteio diário.</p>
         </header>
 
-        <main>
-            <div class="game-info">
-                <div class="attempts">
-                    Tentativas: <span id="attempts">0</span>/10
-                </div>
-            </div>
+        <div class="game-info">
+            <div class="attempts">Tentativas: <span id="attempts">0</span> / 10</div>
+        </div>
 
+        <main>
             <div class="input-section">
                 <div class="autocomplete-wrapper">
                     <input 
