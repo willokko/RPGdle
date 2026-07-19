@@ -17,6 +17,19 @@ const modalTitle = document.getElementById('modal-title');
 const modalMessage = document.getElementById('modal-message');
 const modalClose = document.getElementById('modal-close');
 const autocompleteList = document.getElementById('autocomplete-list');
+const normalModeButton = document.getElementById('normal-mode-button');
+const easyModeButton = document.getElementById('easy-mode-button');
+const modeDescription = document.getElementById('mode-description');
+
+let modo = 'normal';
+const estadosPorModo = { normal: null, facil: null };
+const MIN_PARTICIPACOES_FACIL = 3;
+const ESTADO_KEY_BASE = 'rpgdle-estado';
+const ESTADO_KEY_NORMAL = `${ESTADO_KEY_BASE}-normal`;
+const ESTADO_KEY_FACIL = `${ESTADO_KEY_BASE}-facil`;
+const HISTORICO_KEY_NORMAL = 'rpgdle-historico-personagens';
+const HISTORICO_KEY_FACIL = 'rpgdle-historico-personagens-facil';
+const RECENTE_DIAS = 100;
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', init);
@@ -29,17 +42,26 @@ async function init() {
         return;
     }
 
+    const estadoSalvoHoje = carregarEstadoDoJogo();
+
     try {
         personagemDoDia = await selecionarPersonagemDoDia();
-        console.log('Personagem do dia (debug):', personagemDoDia?.Nome); // Para debug
+        console.log('Personagem do dia (debug):', personagemDoDia?.Nome);
     } catch (error) {
         console.error('Erro ao selecionar personagem do dia:', error);
         showMessage('Erro ao definir o personagem do dia!', 'error');
         return;
     }
-    
+
     setupEventListeners();
-    carregarEstadoDoJogo();
+    updateModeUI();
+
+    if (estadoSalvoHoje) {
+        restaurarEstado(estadoSalvoHoje);
+    } else {
+        resetEstadoAtual();
+        salvarEstadoDoJogo();
+    }
 }
 
 // Carregar personagens do CSV
@@ -49,7 +71,7 @@ async function carregarPersonagens() {
         const csvText = await response.text();
         personagens = parseCSV(csvText);
         console.log('Personagens carregados:', personagens.length);
-        // Debug: mostrar primeiro personagem com imagem
+
         const comImagem = personagens.find(p => p.Imagem && p.Imagem !== 'images/placeholder.svg');
         if (comImagem) {
             console.log('Exemplo de personagem com imagem:', comImagem.Nome, comImagem.Imagem);
@@ -60,33 +82,28 @@ async function carregarPersonagens() {
     }
 }
 
-// Função para parsear CSV
 function parseCSV(csvText) {
     const lines = csvText.trim().split('\n');
     const data = [];
-    
-    // Parsear primeira linha (cabeçalhos)
     const headers = parseCSVLine(lines[0]);
-    
+
     for (let i = 1; i < lines.length; i++) {
-        if (!lines[i].trim()) continue; // Pular linhas vazias
-        
+        const line = lines[i].trim();
+        if (!line) continue;
+
         const values = parseCSVLine(lines[i]);
         const obj = {};
-        
+
         for (let j = 0; j < headers.length; j++) {
             const header = headers[j];
             let value = values[j] || '';
-            
-            // Mapear nomes de colunas do CSV para o formato esperado
             let mappedHeader = header;
+
             if (header === 'Personagem') mappedHeader = 'Nome';
             if (header === 'Status') mappedHeader = 'Estado';
-            
-            // Processar campo Imagem
+
             if (mappedHeader === 'Imagem') {
-                // Se vazio, usar placeholder
-                if (!value || value === '') {
+                if (!value) {
                     value = 'images/placeholder.svg';
                 } else if (!value.startsWith('images/') && !value.startsWith('./images/')) {
                     value = 'images/' + value;
@@ -94,73 +111,82 @@ function parseCSV(csvText) {
                 obj[mappedHeader] = value;
                 continue;
             }
-            
-            // Processar valores específicos
+
             if (mappedHeader === 'Participações') {
-                // Converter "20+" para número ou deixar vazio como 0
                 if (value === '20+') value = 20;
                 else if (value === '' || value === 'Indefinido') value = 0;
-                else value = parseInt(value) || 0;
+                else value = parseInt(value, 10) || 0;
             } else if (mappedHeader === 'Idade') {
-                // Converter idade:
-                // - "Indefinido" = Infinity (imortal/muito velho, maior que qualquer número)
-                // - "Desconhecido" ou vazio = null (não sabemos, não comparar)
                 if (value === 'Indefinido') value = Infinity;
                 else if (value === 'Desconhecido' || value === '') value = null;
-                else value = parseInt(value) || null;
+                else value = parseInt(value, 10) || null;
             } else if (mappedHeader === 'Altura') {
-                // Converter altura de "1,77m" ou "2m" para centímetros
                 if (value === '' || value === 'Indefinido' || value === 'Variável') {
                     value = null;
                 } else if (value.includes('cm')) {
-                    value = parseInt(value.replace('cm', '')) || 0;
+                    value = parseInt(value.replace('cm', ''), 10) || 0;
                 } else if (value.includes('m')) {
                     const metros = parseFloat(value.replace('m', '').replace(',', '.')) || 0;
                     value = Math.round(metros * 100);
                 } else {
-                    value = parseInt(value) || 0;
+                    value = parseInt(value, 10) || 0;
                 }
             }
-            
+
             obj[mappedHeader] = value;
         }
-        
+
         data.push(obj);
     }
-    
+
     return data;
 }
 
-// Função auxiliar para parsear linha CSV com aspas
 function parseCSVLine(line) {
     const result = [];
     let current = '';
     let inQuotes = false;
-    
+
     for (let i = 0; i < line.length; i++) {
         const char = line[i];
-        
+
         if (char === '"') {
             inQuotes = !inQuotes;
-        } else if (char === ',' && !inQuotes) {
+            continue;
+        }
+
+        if (char === ',' && !inQuotes) {
             result.push(current.trim());
             current = '';
-        } else {
-            current += char;
+            continue;
         }
+
+        current += char;
     }
-    
+
     result.push(current.trim());
     return result;
 }
 
-const RECENTE_DIAS = 100;
-const HISTORICO_KEY = 'rpgdle-historico-personagens';
+function getHistoricoKey() {
+    return modo === 'facil' ? HISTORICO_KEY_FACIL : HISTORICO_KEY_NORMAL;
+}
 
-// Selecionar personagem do dia (usando hash SHA-256 da data para consistência diária)
+function getEstadoKey(modoAlvo = modo) {
+    return modoAlvo === 'facil' ? ESTADO_KEY_FACIL : ESTADO_KEY_NORMAL;
+}
+
+function getPersonagensParaModo() {
+    return modo === 'facil'
+        ? personagens.filter(p => p.Participações >= MIN_PARTICIPACOES_FACIL)
+        : personagens;
+}
+
 async function selecionarPersonagemDoDia() {
-    if (!Array.isArray(personagens) || personagens.length === 0) {
-        throw new Error('Lista de personagens não carregada');
+    const pool = getPersonagensParaModo();
+
+    if (!Array.isArray(pool) || pool.length === 0) {
+        throw new Error('Nenhum personagem disponível para a seleção do dia neste modo');
     }
 
     const dataAtual = getDataAtual();
@@ -168,32 +194,32 @@ async function selecionarPersonagemDoDia() {
     const registroHoje = historico.find(entry => entry.data === dataAtual);
 
     if (registroHoje) {
-        const personagemExistente = personagens.find(p => p.Nome === registroHoje.nome);
+        const personagemExistente = pool.find(p => p.Nome === registroHoje.nome);
         if (personagemExistente) {
             return personagemExistente;
         }
     }
 
     const encoder = new TextEncoder();
-    const data = encoder.encode(dataAtual);
+    const data = encoder.encode(`${dataAtual}:${modo}`);
     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
     const hashArray = new Uint8Array(hashBuffer);
 
-    let seed = (
+    const seed = (
         (hashArray[0] << 24) |
         (hashArray[1] << 16) |
-        (hashArray[2] << 8)  |
+        (hashArray[2] << 8) |
         (hashArray[3])
     ) >>> 0;
 
-    const index = seed % personagens.length;
+    let index = seed % pool.length;
     const nomesRecentes = new Set(historico.map(entry => entry.nome));
+    let personagemSelecionado = pool[index];
 
-    let personagemSelecionado = personagens[index];
-    if (nomesRecentes.has(personagemSelecionado.Nome) && nomesRecentes.size < personagens.length) {
-        for (let offset = 1; offset < personagens.length; offset++) {
-            const i = (index + offset) % personagens.length;
-            const candidato = personagens[i];
+    if (nomesRecentes.has(personagemSelecionado.Nome) && nomesRecentes.size < pool.length) {
+        for (let offset = 1; offset < pool.length; offset++) {
+            const i = (index + offset) % pool.length;
+            const candidato = pool[i];
             if (!nomesRecentes.has(candidato.Nome)) {
                 personagemSelecionado = candidato;
                 break;
@@ -207,7 +233,6 @@ async function selecionarPersonagemDoDia() {
     return personagemSelecionado;
 }
 
-// Obter data atual (formato YYYY-MM-DD)
 function getDataAtual() {
     const hoje = new Date();
     return hoje.toISOString().split('T')[0];
@@ -215,7 +240,7 @@ function getDataAtual() {
 
 function carregarHistoricoPersonagensUsados() {
     try {
-        const raw = localStorage.getItem(HISTORICO_KEY);
+        const raw = localStorage.getItem(getHistoricoKey());
         return raw ? JSON.parse(raw) : [];
     } catch (error) {
         console.warn('Histórico de personagens usado inválido, reiniciando.', error);
@@ -224,7 +249,7 @@ function carregarHistoricoPersonagensUsados() {
 }
 
 function salvarHistoricoPersonagensUsados(historico) {
-    localStorage.setItem(HISTORICO_KEY, JSON.stringify(historico));
+    localStorage.setItem(getHistoricoKey(), JSON.stringify(historico));
 }
 
 function limparHistoricoAntigo(historico) {
@@ -234,71 +259,114 @@ function limparHistoricoAntigo(historico) {
     return historico.filter(entry => entry.data >= limiteStr);
 }
 
-// Carregar estado do jogo do localStorage
-function carregarEstadoDoJogo() {
-    const dataAtual = getDataAtual();
-    const estadoSalvo = localStorage.getItem('rpgdle-estado');
-    
-    if (estadoSalvo) {
-        const estado = JSON.parse(estadoSalvo);
-        
-        // Se for o mesmo dia, restaurar o estado
-        if (estado.data === dataAtual) {
-            tentativas = estado.tentativas;
-            palpitesFeitos = estado.palpites;
-            jogoTerminado = estado.jogoTerminado;
-            
-            // Restaurar palpites na tela, adicionando na ordem inversa (mais antigos primeiro)
-            // para que o último adicionado (mais recente) fique no topo
-            for (let i = palpitesFeitos.length - 1; i >= 0; i--) {
-                const nomePalpite = palpitesFeitos[i];
-                const personagem = personagens.find(p => p.Nome === nomePalpite);
-                if (personagem) {
-                    // Usar insertFirst=false para adicionar na ordem correta (o primeiro será o mais antigo)
-                    // e os próximos serão inseridos antes dele, mantendo a ordem correta
-                    adicionarPalpiteAoGrid(personagem, true);
-                }
+function carregarEstadoDoJogo(modoAlvo = modo) {
+    const estadoCache = estadosPorModo[modoAlvo];
+    if (estadoCache && estadoCache.data === getDataAtual()) {
+        return estadoCache;
+    }
+
+    try {
+        const raw = localStorage.getItem(getEstadoKey(modoAlvo));
+        if (!raw) {
+            const legacyRaw = localStorage.getItem(ESTADO_KEY_BASE);
+            if (!legacyRaw) return null;
+
+            const estado = JSON.parse(legacyRaw);
+            if (estado && estado.data === getDataAtual()) {
+                const estadoMigrado = {
+                    data: estado.data,
+                    modo: estado.modo || modoAlvo,
+                    tentativas: estado.tentativas || 0,
+                    palpites: Array.isArray(estado.palpites) ? estado.palpites : [],
+                    jogoTerminado: Boolean(estado.jogoTerminado)
+                };
+                localStorage.setItem(getEstadoKey(estadoMigrado.modo), JSON.stringify(estadoMigrado));
+                localStorage.removeItem(ESTADO_KEY_BASE);
+                estadosPorModo[estadoMigrado.modo] = estadoMigrado;
+                return estadoMigrado;
             }
-            
-            atualizarTentativas();
-            
-            if (jogoTerminado) {
-                desabilitarJogo();
-            }
-        } else {
-            // Novo dia, limpar estado
-            limparEstado();
+
+            localStorage.removeItem(ESTADO_KEY_BASE);
+            return null;
         }
+
+        const estado = JSON.parse(raw);
+        if (estado.data === getDataAtual()) {
+            estadosPorModo[modoAlvo] = estado;
+            return estado;
+        }
+
+        localStorage.removeItem(getEstadoKey(modoAlvo));
+        estadosPorModo[modoAlvo] = null;
+        return null;
+    } catch (error) {
+        console.warn('Estado do jogo inválido, reiniciando.', error);
+        localStorage.removeItem(getEstadoKey(modoAlvo));
+        estadosPorModo[modoAlvo] = null;
+        return null;
     }
 }
 
-// Salvar estado do jogo
+function restaurarEstado(estado) {
+    if (!estado || estado.data !== getDataAtual()) return;
+
+    estadosPorModo[modo] = estado;
+    guessesContainer.innerHTML = '';
+    tentativas = estado.tentativas || 0;
+    palpitesFeitos = Array.isArray(estado.palpites) ? estado.palpites : [];
+    jogoTerminado = Boolean(estado.jogoTerminado);
+
+    for (let i = palpitesFeitos.length - 1; i >= 0; i--) {
+        const nomePalpite = palpitesFeitos[i];
+        const personagem = personagens.find(p => p.Nome === nomePalpite);
+        if (personagem) {
+            adicionarPalpiteAoGrid(personagem, true);
+        }
+    }
+
+    atualizarTentativas();
+    habilitarJogo();
+    guessInput.value = '';
+    autocompleteList.innerHTML = '';
+
+    if (jogoTerminado) {
+        desabilitarJogo();
+    }
+}
+
 function salvarEstadoDoJogo() {
     const estado = {
         data: getDataAtual(),
+        modo: modo,
         tentativas: tentativas,
         palpites: palpitesFeitos,
         jogoTerminado: jogoTerminado
     };
-    localStorage.setItem('rpgdle-estado', JSON.stringify(estado));
+    localStorage.setItem(getEstadoKey(), JSON.stringify(estado));
+    estadosPorModo[modo] = estado;
 }
 
-// Limpar estado
-function limparEstado() {
-    localStorage.removeItem('rpgdle-estado');
-    // Resetar variáveis do jogo
+function resetEstadoAtual() {
     tentativas = 0;
     palpitesFeitos = [];
     jogoTerminado = false;
-    // Limpar interface
     guessesContainer.innerHTML = '';
     atualizarTentativas();
-    // Reabilitar inputs
-    guessInput.disabled = false;
-    guessButton.disabled = false;
+    habilitarJogo();
+    estadosPorModo[modo] = {
+        data: getDataAtual(),
+        modo: modo,
+        tentativas: 0,
+        palpites: [],
+        jogoTerminado: false
+    };
 }
 
-// Setup event listeners
+function limparEstado() {
+    localStorage.removeItem(getEstadoKey());
+    resetEstadoAtual();
+}
+
 function setupEventListeners() {
     guessButton.addEventListener('click', handleGuess);
     guessInput.addEventListener('keypress', (e) => {
@@ -306,22 +374,22 @@ function setupEventListeners() {
             handleGuess();
         }
     });
-    
-    // Autocomplete
+
+    normalModeButton.addEventListener('click', () => handleModeChange('normal'));
+    easyModeButton.addEventListener('click', () => handleModeChange('facil'));
+
     guessInput.addEventListener('input', handleAutocomplete);
-    
-    // Fechar autocomplete ao clicar fora
+
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.autocomplete-wrapper')) {
             autocompleteList.innerHTML = '';
         }
     });
-    
-    // Modal
+
     modalClose.addEventListener('click', () => {
         modal.style.display = 'none';
     });
-    
+
     window.addEventListener('click', (e) => {
         if (e.target === modal) {
             modal.style.display = 'none';
@@ -329,24 +397,23 @@ function setupEventListeners() {
     });
 }
 
-// Autocomplete
 function handleAutocomplete() {
     const valor = guessInput.value.toLowerCase();
     autocompleteList.innerHTML = '';
-    
+
     if (!valor || jogoTerminado) {
         return;
     }
-    
-    const sugestoes = personagens
+
+    const pool = getPersonagensParaModo();
+    const sugestoes = pool
         .filter(p => p.Nome.toLowerCase().includes(valor) && !palpitesFeitos.includes(p.Nome))
         .slice(0, 20);
-    
+
     sugestoes.forEach(personagem => {
         const div = document.createElement('div');
         div.className = 'autocomplete-item';
-        
-        // Adicionar imagem
+
         const img = document.createElement('img');
         img.src = personagem.Imagem || 'images/placeholder.svg';
         img.alt = personagem.Nome;
@@ -354,96 +421,79 @@ function handleAutocomplete() {
         img.onerror = function() {
             this.src = 'images/placeholder.svg';
         };
-        
-        // Adicionar nome
+
         const span = document.createElement('span');
         span.textContent = personagem.Nome;
-        
+
         div.appendChild(img);
         div.appendChild(span);
-        
+
         div.addEventListener('click', () => {
             guessInput.value = personagem.Nome;
             autocompleteList.innerHTML = '';
         });
+
         autocompleteList.appendChild(div);
     });
 }
 
-// Função principal de palpite
 function handleGuess() {
     if (jogoTerminado) {
         return;
     }
-    
+
     const palpite = guessInput.value.trim();
-    
     if (!palpite) {
         showMessage('Digite o nome de um personagem!', 'error');
         return;
     }
-    
-    // Verificar se o personagem existe
-    const personagem = personagens.find(p => p.Nome.toLowerCase() === palpite.toLowerCase());
-    
+
+    const pool = getPersonagensParaModo();
+    const personagem = pool.find(p => p.Nome.toLowerCase() === palpite.toLowerCase());
     if (!personagem) {
         showMessage('Personagem não encontrado! Verifique a biblioteca.', 'error');
         return;
     }
-    
-    // Verificar se já foi palpitado
+
     if (palpitesFeitos.includes(personagem.Nome)) {
         showMessage('Você já tentou este personagem!', 'error');
         return;
     }
-    
-    // Adicionar palpite
+
     tentativas++;
     palpitesFeitos.push(personagem.Nome);
     atualizarTentativas();
-    
-    // Adicionar ao grid (inserindo no início para que o mais recente fique no topo)
+
     adicionarPalpiteAoGrid(personagem, true);
-    
-    // Limpar input
     guessInput.value = '';
     autocompleteList.innerHTML = '';
-    
-    // Verificar vitória
+
     if (personagem.Nome === personagemDoDia.Nome) {
         vitoria();
     } else if (tentativas >= MAX_TENTATIVAS) {
         derrota();
     }
-    
-    // Salvar estado
+
     salvarEstadoDoJogo();
 }
 
-// Formatar valor para exibição
 function formatarValorParaExibicao(valor, atributo) {
-    // Se for Infinity (idade indefinida - imortal), mostrar "Indefinido"
     if (valor === Infinity) {
         return 'Indefinido';
     }
-    // Se for null (idade desconhecida), mostrar "?"
     if (valor === null) {
         return '?';
     }
-    // Se for altura em cm, formatar com "cm"
     if (atributo === 'Altura' && typeof valor === 'number' && valor > 0) {
         return valor + 'cm';
     }
     return valor;
 }
 
-// Adicionar palpite ao grid
-// Se insertFirst for true, insere no início do container (útil para mostrar os mais recentes primeiro)
 function adicionarPalpiteAoGrid(personagem, insertFirst = false) {
     const row = document.createElement('div');
     row.className = 'guess-row';
-    
-    // Adicionar célula da imagem
+
     const imgCell = document.createElement('div');
     imgCell.className = 'grid-cell img-cell';
     const img = document.createElement('img');
@@ -455,65 +505,46 @@ function adicionarPalpiteAoGrid(personagem, insertFirst = false) {
     };
     imgCell.appendChild(img);
     row.appendChild(imgCell);
-    
-    // Adicionar célula do nome (sempre visível)
+
     const nameCell = document.createElement('div');
     nameCell.className = 'grid-cell name-cell';
     nameCell.textContent = personagem.Nome;
-    
-    // Verificar se é o personagem correto para estilizar
     if (personagem.Nome === personagemDoDia.Nome) {
         nameCell.classList.add('correto');
     } else {
         nameCell.classList.add('neutral');
     }
-    
     row.appendChild(nameCell);
-    
-    // Comparar cada atributo
+
     const atributos = ['Gênero', 'Player', 'RPG', 'Estado', 'Participações', 'Idade', 'Altura'];
-    
     atributos.forEach(atributo => {
         const cell = document.createElement('div');
         cell.className = 'grid-cell';
-        
+
         const valorPalpite = personagem[atributo];
         const valorCorreto = personagemDoDia[atributo];
-        
-        // Comparação
+
         if (valorPalpite === valorCorreto) {
             cell.classList.add('correto');
             cell.textContent = formatarValorParaExibicao(valorPalpite, atributo);
         } else {
             cell.classList.add('incorreto');
-            
-            // Para campos numéricos, adicionar setas
-            // Mas não adicionar setas se algum dos valores for null (desconhecido)
             if (typeof valorPalpite === 'number' && valorCorreto !== null && valorPalpite !== null) {
                 const textSpan = document.createElement('span');
                 textSpan.textContent = formatarValorParaExibicao(valorPalpite, atributo);
-                
                 const arrowSpan = document.createElement('span');
                 arrowSpan.className = 'arrow';
-                
-                if (valorCorreto > valorPalpite) {
-                    arrowSpan.textContent = '⬆️';
-                } else {
-                    arrowSpan.textContent = '⬇️';
-                }
-                
+                arrowSpan.textContent = valorCorreto > valorPalpite ? '⬆️' : '⬇️';
                 cell.appendChild(textSpan);
                 cell.appendChild(arrowSpan);
             } else {
-                // Se for null ou string, apenas mostrar o valor sem seta
                 cell.textContent = formatarValorParaExibicao(valorPalpite, atributo);
             }
         }
-        
+
         row.appendChild(cell);
     });
-    
-    // Inserir no início do container para que o mais recente fique no topo
+
     if (insertFirst && guessesContainer.firstChild) {
         guessesContainer.insertBefore(row, guessesContainer.firstChild);
     } else {
@@ -521,48 +552,82 @@ function adicionarPalpiteAoGrid(personagem, insertFirst = false) {
     }
 }
 
-// Atualizar contador de tentativas
 function atualizarTentativas() {
-    attemptsSpan.textContent = tentativas;
+    if (attemptsSpan) {
+        attemptsSpan.textContent = tentativas;
+    }
 }
 
-// Vitória
 function vitoria() {
     jogoTerminado = true;
     desabilitarJogo();
-    
     modalTitle.textContent = '🎉 Parabéns!';
     modalMessage.textContent = `Você acertou em ${tentativas} tentativa${tentativas > 1 ? 's' : ''}! O personagem era ${personagemDoDia.Nome}.`;
     modal.style.display = 'block';
-    
     showMessage('Você venceu! 🎉', 'success');
     salvarEstadoDoJogo();
 }
 
-// Derrota
+function updateModeUI() {
+    if (modo === 'facil') {
+        normalModeButton.classList.remove('active');
+        easyModeButton.classList.add('active');
+        modeDescription.textContent = 'Versão Fácil: apenas personagens com 3 ou mais participações entram no sorteio diário.';
+    } else {
+        easyModeButton.classList.remove('active');
+        normalModeButton.classList.add('active');
+        modeDescription.textContent = 'Modo Normal: todos os personagens entram no sorteio diário.';
+    }
+}
+
+async function handleModeChange(novoModo) {
+    if (modo === novoModo) return;
+
+    salvarEstadoDoJogo();
+    modo = novoModo;
+    updateModeUI();
+
+    try {
+        personagemDoDia = await selecionarPersonagemDoDia();
+        const estadoSalvo = carregarEstadoDoJogo(novoModo);
+
+        if (estadoSalvo) {
+            restaurarEstado(estadoSalvo);
+        } else {
+            resetEstadoAtual();
+            salvarEstadoDoJogo();
+        }
+
+        console.log('Personagem do dia (debug):', personagemDoDia?.Nome);
+    } catch (error) {
+        console.error('Erro ao selecionar personagem do dia:', error);
+        showMessage('Erro ao definir o personagem do dia!', 'error');
+    }
+}
+
 function derrota() {
     jogoTerminado = true;
     desabilitarJogo();
-    
     modalTitle.textContent = '😔 Que pena!';
     modalMessage.textContent = `Você esgotou suas tentativas. O personagem era ${personagemDoDia.Nome}.`;
     modal.style.display = 'block';
-    
     showMessage(`Fim de jogo! O personagem era ${personagemDoDia.Nome}.`, 'error');
     salvarEstadoDoJogo();
 }
 
-// Desabilitar jogo
+function habilitarJogo() {
+    guessInput.disabled = false;
+    guessButton.disabled = false;
+}
+
 function desabilitarJogo() {
     guessInput.disabled = true;
     guessButton.disabled = true;
 }
 
-// Mostrar mensagem
 function showMessage(texto, tipo) {
     messageDiv.textContent = texto;
     messageDiv.className = `message ${tipo}`;
-    
     setTimeout(() => {
         messageDiv.textContent = '';
         messageDiv.className = 'message';
