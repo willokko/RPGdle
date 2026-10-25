@@ -1,8 +1,26 @@
 export const PLACEHOLDER = 'images/placeholder.svg';
+export const MAX_IMAGE_BYTES = 64 * 1024;
+export const MAX_IMAGE_DATA_URL_LENGTH = 23 + 4 * Math.ceil(MAX_IMAGE_BYTES / 3);
+
+export function imagemIncorporada(value) {
+    return typeof value === 'string' && value.startsWith('data:');
+}
+
+export function validarImagemIncorporada(value) {
+    if (value.length > MAX_IMAGE_DATA_URL_LENGTH) throw new Error('O retrato deve ter até 64 KiB. Escolha o arquivo para reduzi-lo automaticamente.');
+    const match = /^data:image\/(jpeg|png|webp);base64,((?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?)$/.exec(value);
+    if (!match || !match[2]) throw new Error('Retrato incorporado inválido. Use uma imagem JPG, PNG ou WebP.');
+    const payload = match[2];
+    const bytes = payload.length / 4 * 3 - (payload.endsWith('==') ? 2 : payload.endsWith('=') ? 1 : 0);
+    if (bytes > MAX_IMAGE_BYTES) throw new Error('O retrato deve ter até 64 KiB.');
+    return value;
+}
 
 export function caminhoImagem(value = '') {
     const path = value.trim();
     if (!path) return PLACEHOLDER;
+    if (imagemIncorporada(path)) return validarImagemIncorporada(path);
+    if (path.length > 2000) throw new Error('O caminho da imagem é muito longo.');
     if (/^https:\/\//i.test(path)) {
         const url = new URL(path);
         if (url.username || url.password) throw new Error('URL de imagem inválida.');
@@ -78,7 +96,6 @@ export function validarPersonagem(input) {
     result.idade = input.idade === null || input.idade === 'Indefinido' ? input.idade : integer(input.idade, 'Idade', 1000000000);
     result.altura = input.altura === null ? null : integer(input.altura, 'Altura em centímetros', 1000000);
     result.imagem = caminhoImagem(input.imagem);
-    if (result.imagem.length > 2000) throw new Error('O caminho da imagem é muito longo.');
     result.ordem = integer(input.ordem, 'Ordem', 1000000000);
     return result;
 }

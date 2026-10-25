@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { parseCSV, lerCSV, caminhoImagem, validarPersonagem, paraJogo } from '../personagens-model.js';
+import { parseCSV, lerCSV, caminhoImagem, validarPersonagem, paraJogo, MAX_IMAGE_BYTES } from '../personagens-model.js';
 
 const csv = await readFile(new URL('../personagens.csv', import.meta.url), 'utf8');
 const personagens = parseCSV(csv);
@@ -52,4 +52,21 @@ test('validação impede dados incompletos, números inválidos e idades negativ
         assert.throws(() => validarPersonagem({ ...original, ...change }));
     }
     assert.equal(validarPersonagem({ ...original, idade: 0 }).idade, 0);
+});
+
+test('retratos incorporados têm MIME restrito, Base64 válido e até 64 KiB decodificados', () => {
+    for (const type of ['jpeg', 'png', 'webp']) {
+        const dataURL = `data:image/${type};base64,${Buffer.alloc(MAX_IMAGE_BYTES).toString('base64')}`;
+        assert.equal(caminhoImagem(dataURL), dataURL);
+        const personagem = validarPersonagem({ ...personagens[0], imagem: dataURL });
+        assert.equal(paraJogo(personagem).Imagem, dataURL);
+    }
+    for (const bytes of [MAX_IMAGE_BYTES + 1, MAX_IMAGE_BYTES + 3]) {
+        assert.throws(() => caminhoImagem(`data:image/webp;base64,${Buffer.alloc(bytes).toString('base64')}`), /64 KiB/);
+    }
+    for (const invalid of ['data:image/svg+xml;base64,PHN2Zz4=', 'data:text/html;base64,PGgxPg==',
+        'data:image/png;base64,', 'data:image/png;base64,a', 'data:image/png;base64,AA=A', 'data:image/png;base64,AAAA!']) {
+        assert.throws(() => caminhoImagem(invalid));
+    }
+    assert.throws(() => caminhoImagem(`images/${'x'.repeat(2001)}`), /longo/);
 });

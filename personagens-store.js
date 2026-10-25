@@ -1,5 +1,5 @@
 import {
-    collection, query, orderBy, getDocsFromServer, doc, runTransaction,
+    collection, query, orderBy, getDocsFromServer, getDocFromServer, doc, runTransaction,
     serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
 import { db } from './firebase-client.js';
@@ -10,6 +10,10 @@ const personagensRef = collection(db, 'personagens');
 export async function listarPersonagens() {
     const snapshot = await getDocsFromServer(query(personagensRef, orderBy('ordem')));
     return snapshot.docs.map(item => ({ ...item.data(), id: item.id }));
+}
+
+export async function csvFoiImportado() {
+    return (await getDocFromServer(doc(db, 'configuracao', 'importacao'))).exists();
 }
 
 export async function salvarPersonagem(input, anterior = null) {

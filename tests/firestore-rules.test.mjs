@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { parseCSV } from '../personagens-model.js';
+import { parseCSV, MAX_IMAGE_BYTES } from '../personagens-model.js';
 
 // Destino fixo e fictício: nunca usar credenciais nem o projeto de produção.
 const host = 'http://127.0.0.1:8087';
@@ -54,6 +54,15 @@ test('regras protegem o banco e aceitam a importação real inteira', async () =
     await denied(commit([write('personagens/invalido', { ...sample, extra: 'campo não permitido' })], adminUid));
     await denied(commit([write('personagens/invalido', { ...sample, imagem: 'javascript:alert(1)' })], adminUid));
     await denied(commit([write('outros/documento', sample)], adminUid));
+    const retrato = `data:image/webp;base64,${Buffer.alloc(MAX_IMAGE_BYTES).toString('base64')}`;
+    await denied(commit([write('personagens/retrato', { ...sample, imagem: retrato })]));
+    await denied(commit([write('personagens/retrato', { ...sample, imagem: retrato })], 'outra-conta'));
+    await denied(commit([write('personagens/retrato', { ...sample, imagem: 'data:image/svg+xml;base64,PHN2Zz4=' })], adminUid));
+    await denied(commit([write('personagens/retrato', { ...sample, imagem: `${retrato}AAAA` })], adminUid));
+    await accepted(commit([write('personagens/retrato', { ...sample, imagem: retrato })], adminUid));
+    const publicImage = await request(`${base}/personagens/retrato`);
+    assert.equal((await publicImage.json()).fields.imagem.stringValue, retrato);
+    await accepted(commit([{ delete: `${prefix}/personagens/retrato` }], adminUid));
 
     const imports = data.map((p, index) => write(`personagens/csv-${String(index + 1).padStart(4, '0')}`, p));
     imports.push({ update: { name: `${prefix}/configuracao/importacao`, fields: fields({ total: data.length }) },
@@ -71,8 +80,9 @@ test('regras protegem o banco e aceitam a importação real inteira', async () =
 
     await denied(commit([{ ...edit, update: { ...edit.update, fields: { ...edit.update.fields, ordem: { integerValue: '500' } } } }], adminUid));
     await denied(commit([{ ...edit, updateTransforms: [] }], adminUid));
-    await denied(request(`${base}/configuracao/importacao`));
-    await denied(request(`${base}/configuracao/importacao`, 'outra-conta'));
+    await accepted(request(`${base}/configuracao/importacao`));
+    await accepted(request(`${base}/configuracao/importacao`, 'outra-conta'));
+    await denied(request(`${base}/configuracao/outra`));
     await accepted(request(`${base}/configuracao/importacao`, adminUid));
     await denied(commit([imports.at(-1)], adminUid));
     // Uma gravação válida no personagem também é revertida se a marca já existir.

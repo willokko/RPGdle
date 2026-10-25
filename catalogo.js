@@ -11,16 +11,23 @@ export async function carregarCatalogo() {
     let timeout;
     try {
         const remoto = async () => {
-            const { listarPersonagens } = await import('./personagens-store.js');
-            return (await listarPersonagens()).map(paraJogo);
+            const { listarPersonagens, csvFoiImportado } = await import('./personagens-store.js');
+            const personagens = (await listarPersonagens()).map(paraJogo);
+            if (!personagens.length && !await csvFoiImportado()) {
+                return {
+                    personagens: (await lerPersonagensCSV()).map(paraJogo),
+                    aviso: 'Catálogo em preparação. Exibindo os personagens originais do site.'
+                };
+            }
+            return { personagens, aviso: personagens.length ? '' : 'Nenhum personagem publicado no momento.' };
         };
-        const personagens = await Promise.race([
+        const catalogo = await Promise.race([
             remoto(), new Promise((_, reject) => {
                 timeout = setTimeout(() => reject(new Error('Tempo de conexão esgotado.')), 8000);
             })
         ]);
-        // Uma coleção vazia é válida; não ressuscitar personagens removidos.
-        return { personagens, aviso: personagens.length ? '' : 'Nenhum personagem publicado no momento.' };
+        // Após a importação, uma coleção vazia continua válida (exclusão de todos).
+        return catalogo;
     } catch (error) {
         console.warn('Catálogo remoto indisponível. Usando CSV de reserva.', error);
         return {

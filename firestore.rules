@@ -11,6 +11,14 @@ service cloud.firestore {
     function inteiro(value, max) {
       return value is int && value >= 0 && value <= max;
     }
+    function imagemValida(value) {
+      return value is string && (
+        (value.size() <= 2000 &&
+          (value.matches('images/[^<>]+') || value.matches('https://[^<>]+')))
+        || (value.size() <= 87407 &&
+          value.matches('data:image/(jpeg|png|webp);base64,[A-Za-z0-9+/]+={0,2}'))
+      );
+    }
     function personagemValido(data) {
       return data.keys().hasAll(['nome', 'genero', 'player', 'rpg', 'estado',
           'participacoes', 'idade', 'altura', 'imagem', 'ordem', 'createdAt', 'updatedAt'])
@@ -21,8 +29,7 @@ service cloud.firestore {
         && inteiro(data.participacoes, 1000000)
         && (data.idade == null || data.idade == 'Indefinido' || inteiro(data.idade, 1000000000))
         && (data.altura == null || inteiro(data.altura, 1000000))
-        && data.imagem is string && data.imagem.size() <= 2000
-        && (data.imagem.matches('images/[^<>]+') || data.imagem.matches('https://[^<>]+'))
+        && imagemValida(data.imagem)
         && inteiro(data.ordem, 1000000000)
         && data.createdAt is timestamp && data.updatedAt == request.time;
     }
@@ -36,7 +43,8 @@ service cloud.firestore {
       allow delete: if admin();
     }
     match /configuracao/importacao {
-      allow read: if admin();
+      // Apenas total e data: sinal público para a transição do CSV ao banco.
+      allow read: if true;
       allow create: if admin()
         && request.resource.data.keys().hasAll(['total', 'importedAt'])
         && request.resource.data.keys().hasOnly(['total', 'importedAt'])
