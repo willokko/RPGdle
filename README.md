@@ -1,115 +1,52 @@
 # 🎲 RPGdle
 
-Um jogo de adivinhação diário inspirado em Wordle, Pokedle e Loldle, onde você tenta adivinhar um personagem de RPG secreto baseado em seus atributos!
+Jogo diário de adivinhação dos personagens de RPG do grupo. Cada jogador tem dez tentativas e recebe pistas sobre gênero, player, campanha, estado, participações, idade e altura.
 
-## 📋 Sobre o Projeto
+O site usa HTML, CSS e JavaScript sem etapa de build e continua hospedado no GitHub Pages.
 
-RPGdle é um jogo web interativo onde os jogadores têm 10 tentativas para adivinhar o personagem de RPG do dia. A cada palpite, o jogo fornece feedback visual comparando os atributos do personagem palpitado com o personagem secreto.
+## Jogo e biblioteca
 
-## ✨ Funcionalidades
+- Modo normal com todos os personagens e modo fácil com personagens com três ou mais participações.
+- Progresso salvo no navegador, separado por modo.
+- Biblioteca com filtros por campanha e player.
+- Personagens carregados do Cloud Firestore; imagens na pasta `images/` ou em URLs HTTPS.
+- CSV original usado como reserva com aviso quando o banco estiver indisponível. Alterações pelo painel não atualizam esse CSV.
 
-### 🎮 Página do Jogo (index.html)
-- **Personagem Diário**: Um novo personagem é selecionado automaticamente a cada dia
-- **Sistema de Tentativas**: 10 tentativas para adivinhar o personagem correto
-- **Autocomplete Inteligente**: Sugestões de personagens conforme você digita
-- **Feedback Visual**:
-  - 🟢 **Verde**: Atributo correto
-  - 🔴 **Vermelho**: Atributo incorreto
-  - ⬆️ **Seta para cima**: O valor correto é maior
-  - ⬇️ **Seta para baixo**: O valor correto é menor
-- **Persistência de Estado**: Seu progresso é salvo automaticamente
-- **Modal de Vitória/Derrota**: Feedback ao final do jogo
+## Painel administrativo
 
-### 📚 Biblioteca de Personagens (biblioteca.html)
-- **Visualização Completa**: Veja todos os personagens disponíveis
-- **Filtro por RPG**: Filtre personagens por campanha
-- **Cards Informativos**: Todos os atributos exibidos de forma clara
-- **Design Responsivo**: Funciona perfeitamente em dispositivos móveis
+Acesse `admin.html` diretamente. Não há link nos menus públicos. O painel solicita somente a senha da conta administrativa já criada no Firebase e permite:
 
-## 🎯 Atributos Comparados
+- Importar os 288 personagens do CSV uma única vez.
+- Buscar, cadastrar, editar e excluir personagens.
+- Ajustar participações com os botões do formulário e salvar.
+- Editar atributos e conferir a prévia de imagens já publicadas no GitHub.
 
-1. **Gênero** (Categórico)
-2. **Player** (Categórico)
-3. **RPG** (Categórico)
-4. **Estado** (Categórico)
-5. **Participações** (Numérico - com setas)
-6. **Idade** (Numérico - com setas)
-7. **Altura** (Numérico - com setas)
+O Firebase Authentication valida a senha e as regras do Firestore autorizam alterações somente ao UID administrativo. O endereço do painel e a configuração pública do Firebase não são mecanismos de proteção.
 
-## 🚀 Como Usar
+**Para ativar o painel, publique as regras e faça a importação seguindo [FIREBASE.md](FIREBASE.md).** Não é necessário Firebase Storage.
 
-1. **Abra o arquivo `index.html`** em seu navegador
-2. **Digite o nome de um personagem** no campo de entrada
-3. **Clique em "Adivinhar"** ou pressione Enter
-4. **Analise o feedback** para fazer seu próximo palpite
-5. **Visite a Biblioteca** para estudar os personagens disponíveis
+## Executar localmente
 
-## 📁 Estrutura de Arquivos
+Com Node.js instalado:
 
-```
-RPGdle/
-├── index.html          # Página principal do jogo
-├── biblioteca.html     # Página da biblioteca de personagens
-├── style.css          # Estilos globais
-├── app.js             # Lógica do jogo
-├── biblioteca.js      # Lógica da biblioteca
-├── personagens.json   # Base de dados dos personagens
-└── README.md          # Este arquivo
+```sh
+node tmp_server.js
 ```
 
-## 🎨 Tecnologias Utilizadas
+Abra `http://localhost:8000/index.html`, `http://localhost:8000/biblioteca.html` ou `http://localhost:8000/admin.html`. Use um servidor HTTP; módulos JavaScript não funcionam abrindo os arquivos diretamente por `file://`.
 
-- **HTML5**: Estrutura semântica
-- **CSS3**: Estilização moderna com gradientes e animações
-- **JavaScript (Vanilla)**: Lógica do jogo sem dependências
-- **LocalStorage**: Persistência de dados do jogo
+## Arquivos principais
 
-## 📝 Formato do JSON
+| Arquivo | Função |
+| --- | --- |
+| `index.html`, `app.js` | Jogo diário |
+| `biblioteca.html`, `biblioteca.js` | Biblioteca e filtros |
+| `admin.html`, `admin.js`, `admin.css` | Painel administrativo |
+| `firebase-config.js`, `firebase-client.js` | Configuração pública e conexão |
+| `personagens-model.js` | Importação CSV, validação e adaptação para o jogo |
+| `personagens-store.js` | Leitura, gravação e transações no Firestore |
+| `catalogo.js` | Carregamento público e reserva em CSV |
+| `firestore.rules` | Permissões e validação do banco |
+| `personagens.csv`, `images/` | Base original e imagens do GitHub Pages |
 
-```json
-[
-  {
-    "id": 1,
-    "Nome": "Arion",
-    "Gênero": "Homem",
-    "Player": "Bruno",
-    "RPG": "A Queda do Rei Sombrio",
-    "Estado": "Ativo",
-    "Participações": 35,
-    "Idade": 28,
-    "Altura": 185
-  }
-]
-```
-
-## 🔧 Personalização
-
-Para adicionar seus próprios personagens, edite o arquivo `personagens.json` seguindo o formato acima. O jogo carregará automaticamente os novos dados.
-
-## 🎲 Como Funciona o Personagem do Dia
-
-O personagem do dia é selecionado usando a data atual como seed, garantindo que:
-- Todos os jogadores vejam o mesmo personagem no mesmo dia
-- Um novo personagem seja selecionado automaticamente à meia-noite
-- A seleção seja determinística e consistente
-
-## 📱 Responsividade
-
-O jogo é totalmente responsivo e se adapta a diferentes tamanhos de tela:
-- Desktop: Layout completo com grid de 7 colunas
-- Mobile: Layout otimizado com células menores
-
-## 🎯 Dicas para Jogar
-
-1. Visite a **Biblioteca** antes de jogar para conhecer os personagens
-2. Preste atenção nas **setas** dos valores numéricos
-3. Use o **autocomplete** para evitar erros de digitação
-4. Analise os **padrões** entre os palpites anteriores
-
-## 🏆 Objetivo
-
-Adivinhe o personagem correto em até 10 tentativas usando a lógica dedutiva baseada nos feedbacks visuais!
-
----
-
-**Divirta-se jogando RPGdle! 🎮✨**
+Para novas imagens, publique o arquivo em `images/` e depois informe seu nome no painel. Os detalhes sobre primeiro acesso, regras, sorteio e verificações locais estão em [FIREBASE.md](FIREBASE.md).
