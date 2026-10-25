@@ -1,0 +1,6 @@
+{
+  "indexes": [],
+  "fieldOverrides": [
+    { "collectionGroup": "personagens", "fieldPath": "imagem", "indexes": [] }
+  ]
+}

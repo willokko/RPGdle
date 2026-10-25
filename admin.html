@@ -38,7 +38,9 @@
                     <summary>Primeiro acesso e imagens</summary>
                     <p>Importe uma única vez os personagens do CSV atual, antes de cadastrar novos. A importação só funciona com a lista vazia e preserva a ordem do sorteio.</p>
                     <button id="import-button" type="button" class="admin-button" data-write>Importar personagens do CSV</button>
-                    <p>Para adicionar uma imagem, envie o arquivo à pasta <code>images/</code> do GitHub e aguarde a publicação. Depois informe o nome do arquivo no personagem, respeitando maiúsculas e minúsculas.</p>
+                    <button id="compact-images" type="button" class="admin-button" data-write>Compactar retratos existentes</button>
+                    <p>Use a compactação para reduzir os retratos já salvos no banco. Arquivos do GitHub e URLs externas continuam como estão.</p>
+                    <p>Envie um retrato pelo formulário e clique em Salvar personagem. Você também pode usar uma imagem já publicada na pasta <code>images/</code> do GitHub ou uma URL https.</p>
                     <p>As alterações aparecem no jogo e na biblioteca ao recarregar a página. Cadastros, remoções e mudanças de participação podem afetar o sorteio; prefira fazê-los entre os dias de jogo.</p>
                     <p>Se aparecer “permissão negada”, publique as regras de <a href="FIREBASE.md">configuração do Firebase</a>.</p>
                 </details>
@@ -71,10 +73,13 @@
                                     <label>Tipo de idade<select id="age-kind"><option value="number">Conhecida</option><option value="unknown" selected>Desconhecida</option><option value="indefinite">Indefinida</option></select></label>
                                     <label>Idade em anos<input name="idade" type="number" min="0" max="1000000000" step="1" disabled></label>
                                     <label class="full-width">Altura em centímetros<input name="altura" type="number" min="0" max="1000000" step="1" placeholder="Ex.: 177 — deixe vazio se desconhecida"></label>
-                                    <label class="full-width">Imagem<input name="imagem" maxlength="2000" placeholder="Adam.jpg ou images/Adam.jpg" aria-describedby="image-hint"></label>
+                                    <label class="full-width">Enviar retrato do dispositivo<input id="image-upload" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="upload-hint"></label>
+                                    <p id="upload-hint" class="admin-hint full-width">JPG, PNG ou WebP, até 15 MiB. Compactação automática para até 320 pixels, buscando 16 KiB e com limite de 24 KiB por retrato.</p>
+                                    <label class="full-width">Ou usar arquivo do site / URL<input name="imagem" maxlength="2000" placeholder="Adam.jpg ou https://…" aria-describedby="image-hint"></label>
                                 </div>
-                                <p id="image-hint" class="admin-hint">Use um arquivo já publicado em images/ ou uma URL https. Deixe vazio para usar a imagem padrão.</p>
+                                <p id="image-hint" class="admin-hint">Preencher o caminho substitui o retrato selecionado. Deixe sem imagem para usar a imagem padrão.</p>
                                 <div class="admin-preview"><img id="image-preview" src="images/placeholder.svg" alt="Prévia da imagem do personagem"><span id="image-preview-status"></span></div>
+                                <button id="remove-image" class="admin-button" type="button">Remover imagem</button>
                                 <div class="admin-actions editor-actions">
                                     <button class="btn-primary" type="submit">Salvar personagem</button>
                                     <button id="cancel-button" class="admin-button" type="button">Limpar edição</button>

@@ -9,7 +9,7 @@ O site usa HTML, CSS e JavaScript sem etapa de build e continua hospedado no Git
 - Modo normal com todos os personagens e modo fácil com personagens com três ou mais participações.
 - Progresso salvo no navegador, separado por modo.
 - Biblioteca com filtros por campanha e player.
-- Personagens carregados do Cloud Firestore; imagens na pasta `images/` ou em URLs HTTPS.
+- Personagens carregados do Cloud Firestore; retratos enviados pelo painel, imagens na pasta `images/` ou em URLs HTTPS.
 - CSV original usado como reserva com aviso quando o banco estiver indisponível. Alterações pelo painel não atualizam esse CSV.
 
 ## Painel administrativo
@@ -19,7 +19,8 @@ Acesse `admin.html` diretamente. Não há link nos menus públicos. O painel sol
 - Importar os 288 personagens do CSV uma única vez.
 - Buscar, cadastrar, editar e excluir personagens.
 - Ajustar participações com os botões do formulário e salvar.
-- Editar atributos e conferir a prévia de imagens já publicadas no GitHub.
+- Editar atributos e enviar retratos pelo próprio painel: até 320 pixels, meta de 16 KiB e limite de 24 KiB antes de salvar no Firestore.
+- Compactar retratos já salvos no banco, com resumo da economia obtida e sem regravar imagens que já estão otimizadas.
 
 O Firebase Authentication valida a senha e as regras do Firestore autorizam alterações somente ao UID administrativo. O endereço do painel e a configuração pública do Firebase não são mecanismos de proteção.
 
@@ -44,9 +45,10 @@ Abra `http://localhost:8000/index.html`, `http://localhost:8000/biblioteca.html`
 | `admin.html`, `admin.js`, `admin.css` | Painel administrativo |
 | `firebase-config.js`, `firebase-client.js` | Configuração pública e conexão |
 | `personagens-model.js` | Importação CSV, validação e adaptação para o jogo |
+| `retratos.js` | Redução e codificação de retratos enviados pelo painel |
 | `personagens-store.js` | Leitura, gravação e transações no Firestore |
 | `catalogo.js` | Carregamento público e reserva em CSV |
 | `firestore.rules` | Permissões e validação do banco |
 | `personagens.csv`, `images/` | Base original e imagens do GitHub Pages |
 
-Para novas imagens, publique o arquivo em `images/` e depois informe seu nome no painel. Os detalhes sobre primeiro acesso, regras, sorteio e verificações locais estão em [FIREBASE.md](FIREBASE.md).
+Para novas imagens, selecione o arquivo no formulário e clique em **Salvar personagem**. Os arquivos de `images/` e URLs HTTPS continuam aceitos. Antes da primeira importação, o jogo continua usando o CSV para manter os personagens disponíveis. Os detalhes sobre primeiro acesso, regras, sorteio e verificações locais estão em [FIREBASE.md](FIREBASE.md).
