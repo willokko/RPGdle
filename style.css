@@ -4,6 +4,17 @@
     box-sizing: border-box;
 }
 
+[hidden] { display: none !important; }
+.catalogo-aviso {
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border: 1px solid #b19a57;
+    border-radius: 10px;
+    background: #393021;
+    color: #ffe5ab;
+    line-height: 1.5;
+}
+
 html {
     scroll-behavior: smooth;
 }

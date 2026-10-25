@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Administração - RPGdle</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="container admin-container">
+        <header>
+            <h1>RPGdle · Administração</h1>
+            <p class="subtitle">Personagens e campanhas do seu grupo</p>
+            <nav><a href="index.html" class="nav-link">Abrir o jogo</a><a href="biblioteca.html" class="nav-link">Ver biblioteca</a></nav>
+        </header>
+        <main>
+            <p id="admin-status" class="admin-status" role="status" aria-live="polite">Conectando ao painel…</p>
+            <section id="login-panel" class="admin-card login-card" hidden>
+                <h2>Acesso administrativo</h2>
+                <p>Digite a senha compartilhada com os administradores.</p>
+                <form id="login-form">
+                    <label for="admin-password">Senha</label>
+                    <input id="admin-password" type="password" autocomplete="current-password" required>
+                    <button id="login-button" class="btn-primary" type="submit">Entrar</button>
+                </form>
+            </section>
+            <section id="admin-panel" hidden>
+                <div class="admin-toolbar">
+                    <p><strong id="character-count">0</strong> personagens cadastrados</p>
+                    <div class="admin-actions">
+                        <button id="reload-button" type="button" class="admin-button">Recarregar lista</button>
+                        <button id="logout-button" type="button" class="admin-button">Sair</button>
+                    </div>
+                </div>
+                <details class="admin-card import-card">
+                    <summary>Primeiro acesso e imagens</summary>
+                    <p>Importe uma única vez os personagens do CSV atual, antes de cadastrar novos. A importação só funciona com a lista vazia e preserva a ordem do sorteio.</p>
+                    <button id="import-button" type="button" class="admin-button" data-write>Importar personagens do CSV</button>
+                    <p>Para adicionar uma imagem, envie o arquivo à pasta <code>images/</code> do GitHub e aguarde a publicação. Depois informe o nome do arquivo no personagem, respeitando maiúsculas e minúsculas.</p>
+                    <p>As alterações aparecem no jogo e na biblioteca ao recarregar a página. Cadastros, remoções e mudanças de participação podem afetar o sorteio; prefira fazê-los entre os dias de jogo.</p>
+                    <p>Se aparecer “permissão negada”, publique as regras de <a href="FIREBASE.md">configuração do Firebase</a>.</p>
+                </details>
+                <div class="admin-layout">
+                    <section class="admin-card">
+                        <div class="admin-section-heading"><h2>Personagens</h2><button id="new-button" class="admin-button" type="button" data-write>Novo personagem</button></div>
+                        <label for="character-search">Buscar por nome, RPG ou player</label>
+                        <input id="character-search" type="search" placeholder="Ex.: Adam ou Promessa de Galli">
+                        <ul id="character-list" class="admin-character-list" aria-label="Personagens cadastrados"></ul>
+                        <p id="empty-list" hidden>Nenhum personagem encontrado.</p>
+                    </section>
+                    <section class="admin-card">
+                        <h2 id="editor-title">Novo personagem</h2>
+                        <form id="character-form">
+                            <fieldset id="editor-fields">
+                                <div class="admin-form-grid">
+                                    <label class="full-width">Nome<input name="nome" required maxlength="160"></label>
+                                    <label>Gênero<input name="genero" required maxlength="160" list="gender-options"></label>
+                                    <label>Player<input name="player" required maxlength="160" list="player-options"></label>
+                                    <label>RPG<input name="rpg" required maxlength="160" list="rpg-options"></label>
+                                    <label>Estado<input name="estado" required maxlength="160" list="state-options"></label>
+                                    <div class="full-width">
+                                        <label for="participacoes">Participações</label>
+                                        <div class="participation-control">
+                                            <button id="participation-minus" type="button" class="admin-button" aria-label="Diminuir uma participação">−</button>
+                                            <input id="participacoes" name="participacoes" type="number" min="0" max="1000000" step="1" required value="0">
+                                            <button id="participation-plus" type="button" class="admin-button" aria-label="Adicionar uma participação">+1</button>
+                                        </div>
+                                    </div>
+                                    <label>Tipo de idade<select id="age-kind"><option value="number">Conhecida</option><option value="unknown" selected>Desconhecida</option><option value="indefinite">Indefinida</option></select></label>
+                                    <label>Idade em anos<input name="idade" type="number" min="0" max="1000000000" step="1" disabled></label>
+                                    <label class="full-width">Altura em centímetros<input name="altura" type="number" min="0" max="1000000" step="1" placeholder="Ex.: 177 — deixe vazio se desconhecida"></label>
+                                    <label class="full-width">Imagem<input name="imagem" maxlength="2000" placeholder="Adam.jpg ou images/Adam.jpg" aria-describedby="image-hint"></label>
+                                </div>
+                                <p id="image-hint" class="admin-hint">Use um arquivo já publicado em images/ ou uma URL https. Deixe vazio para usar a imagem padrão.</p>
+                                <div class="admin-preview"><img id="image-preview" src="images/placeholder.svg" alt="Prévia da imagem do personagem"><span id="image-preview-status"></span></div>
+                                <div class="admin-actions editor-actions">
+                                    <button class="btn-primary" type="submit">Salvar personagem</button>
+                                    <button id="cancel-button" class="admin-button" type="button">Limpar edição</button>
+                                    <button id="delete-button" class="admin-button danger" type="button" hidden>Excluir</button>
+                                </div>
+                                <p class="admin-hint">Os ajustes só são publicados ao salvar.</p>
+                            </fieldset>
+                        </form>
+                    </section>
+                </div>
+            </section>
+            <datalist id="gender-options"><option value="Homem"><option value="Mulher"><option value="Indefinido"></datalist>
+            <datalist id="state-options"><option value="Ativo"><option value="Inativo"><option value="Morto"></datalist>
+            <datalist id="player-options"></datalist>
+            <datalist id="rpg-options"></datalist>
+            <noscript>Ative o JavaScript para acessar o painel.</noscript>
+        </main>
+    </div>
+    <script type="module" src="admin.js"></script>
+</body>
+</html>

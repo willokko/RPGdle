@@ -1,3 +1,5 @@
+import { carregarCatalogo, mostrarAvisoCatalogo } from './catalogo.js';
+
 // Estado do jogo
 let personagens = [];
 let personagemDoDia = null;
@@ -35,6 +37,7 @@ const RECENTE_DIAS = 100;
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
+    desabilitarJogo();
     await carregarPersonagens();
 
     if (!personagens.length) {
@@ -46,7 +49,6 @@ async function init() {
 
     try {
         personagemDoDia = await selecionarPersonagemDoDia();
-        console.log('Personagem do dia (debug):', personagemDoDia?.Nome);
     } catch (error) {
         console.error('Erro ao selecionar personagem do dia:', error);
         showMessage('Erro ao definir o personagem do dia!', 'error');
@@ -64,108 +66,16 @@ async function init() {
     }
 }
 
-// Carregar personagens do CSV
+// A lista remota mantém a ordem de importação do CSV.
 async function carregarPersonagens() {
     try {
-        const response = await fetch('personagens.csv');
-        const csvText = await response.text();
-        personagens = parseCSV(csvText);
-        console.log('Personagens carregados:', personagens.length);
-
-        const comImagem = personagens.find(p => p.Imagem && p.Imagem !== 'images/placeholder.svg');
-        if (comImagem) {
-            console.log('Exemplo de personagem com imagem:', comImagem.Nome, comImagem.Imagem);
-        }
+        const catalogo = await carregarCatalogo();
+        personagens = catalogo.personagens;
+        mostrarAvisoCatalogo(catalogo.aviso);
     } catch (error) {
         console.error('Erro ao carregar personagens:', error);
-        showMessage('Erro ao carregar dados do jogo!', 'error');
+        mostrarAvisoCatalogo('Não foi possível carregar os personagens. Tente recarregar a página.');
     }
-}
-
-function parseCSV(csvText) {
-    const lines = csvText.trim().split('\n');
-    const data = [];
-    const headers = parseCSVLine(lines[0]);
-
-    for (let i = 1; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (!line) continue;
-
-        const values = parseCSVLine(lines[i]);
-        const obj = {};
-
-        for (let j = 0; j < headers.length; j++) {
-            const header = headers[j];
-            let value = values[j] || '';
-            let mappedHeader = header;
-
-            if (header === 'Personagem') mappedHeader = 'Nome';
-            if (header === 'Status') mappedHeader = 'Estado';
-
-            if (mappedHeader === 'Imagem') {
-                if (!value) {
-                    value = 'images/placeholder.svg';
-                } else if (!value.startsWith('images/') && !value.startsWith('./images/')) {
-                    value = 'images/' + value;
-                }
-                obj[mappedHeader] = value;
-                continue;
-            }
-
-            if (mappedHeader === 'Participações') {
-                if (value === '20+') value = 20;
-                else if (value === '' || value === 'Indefinido') value = 0;
-                else value = parseInt(value, 10) || 0;
-            } else if (mappedHeader === 'Idade') {
-                if (value === 'Indefinido') value = Infinity;
-                else if (value === 'Desconhecido' || value === '') value = null;
-                else value = parseInt(value, 10) || null;
-            } else if (mappedHeader === 'Altura') {
-                if (value === '' || value === 'Indefinido' || value === 'Variável') {
-                    value = null;
-                } else if (value.includes('cm')) {
-                    value = parseInt(value.replace('cm', ''), 10) || 0;
-                } else if (value.includes('m')) {
-                    const metros = parseFloat(value.replace('m', '').replace(',', '.')) || 0;
-                    value = Math.round(metros * 100);
-                } else {
-                    value = parseInt(value, 10) || 0;
-                }
-            }
-
-            obj[mappedHeader] = value;
-        }
-
-        data.push(obj);
-    }
-
-    return data;
-}
-
-function parseCSVLine(line) {
-    const result = [];
-    let current = '';
-    let inQuotes = false;
-
-    for (let i = 0; i < line.length; i++) {
-        const char = line[i];
-
-        if (char === '"') {
-            inQuotes = !inQuotes;
-            continue;
-        }
-
-        if (char === ',' && !inQuotes) {
-            result.push(current.trim());
-            current = '';
-            continue;
-        }
-
-        current += char;
-    }
-
-    result.push(current.trim());
-    return result;
 }
 
 function getHistoricoKey() {
@@ -419,6 +329,7 @@ function handleAutocomplete() {
         img.alt = personagem.Nome;
         img.className = 'autocomplete-img';
         img.onerror = function() {
+            this.onerror = null;
             this.src = 'images/placeholder.svg';
         };
 
@@ -501,6 +412,7 @@ function adicionarPalpiteAoGrid(personagem, insertFirst = false) {
     img.alt = personagem.Nome;
     img.className = 'character-img';
     img.onerror = function() {
+        this.onerror = null;
         this.src = 'images/placeholder.svg';
     };
     imgCell.appendChild(img);
@@ -598,7 +510,6 @@ async function handleModeChange(novoModo) {
             salvarEstadoDoJogo();
         }
 
-        console.log('Personagem do dia (debug):', personagemDoDia?.Nome);
     } catch (error) {
         console.error('Erro ao selecionar personagem do dia:', error);
         showMessage('Erro ao definir o personagem do dia!', 'error');
