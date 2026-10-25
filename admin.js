@@ -1,6 +1,6 @@
 import { ADMIN_EMAIL, ADMIN_UID } from './firebase-config.js';
 import { caminhoImagem, imagemIncorporada, PLACEHOLDER } from './personagens-model.js';
-import { prepararRetrato } from './retratos.js';
+import { prepararRetrato, compactarRetratoExistente } from './retratos.js';
 import { lerPersonagensCSV } from './catalogo.js';
 
 const $ = id => document.getElementById(id);
@@ -158,7 +158,7 @@ $('image-upload').addEventListener('change', () => {
         try {
             const retrato = await prepararRetrato(file);
             retratoAtual = retrato.dataURL;
-            retratoDescricao = `${retrato.width} × ${retrato.height} pixels · ${(retrato.bytes / 1024).toFixed(1)} KiB · Salve para publicar`;
+            retratoDescricao = `${retrato.width} × ${retrato.height} pixels · ${(retrato.storedBytes / 1024).toFixed(1)} KiB no banco · Salve para publicar`;
             field('imagem').value = '';
             dirty = true;
             preview();
@@ -194,6 +194,10 @@ form.addEventListener('submit', event => {
             throw new Error('Já existe um personagem com esse nome. Use um nome que o diferencie no jogo.');
         }
         const kind = $('age-kind').value;
+        if (retratoAtual) {
+            const retrato = await compactarRetratoExistente(retratoAtual);
+            retratoAtual = retrato.dataURL;
+        }
         const data = {
             nome: field('nome').value, genero: field('genero').value, player: field('player').value,
             rpg: field('rpg').value, estado: field('estado').value,
@@ -230,6 +234,29 @@ $('import-button').addEventListener('click', () => {
         dirty = false; editar();
         status(`${data.length} personagens importados. Você já pode editar pelo painel.`, 'success');
         await recarregar();
+    });
+});
+
+$('compact-images').addEventListener('click', () => {
+    if (dirty && !confirm('Descartar alterações do formulário e compactar os retratos salvos?')) return;
+    if (!confirm('Analisar os retratos incorporados e salvar versões menores? A resolução poderá diminuir. Imagens do GitHub e URLs externas não serão alteradas.')) return;
+    operar(async () => {
+        // Ler a versão atual; cada gravação também confere alterações concorrentes.
+        await recarregar();
+        let updated = 0, saved = 0, failed = 0;
+        const retratos = personagens.filter(p => imagemIncorporada(p.imagem));
+        for (const [index, personagem] of retratos.entries()) {
+            status(`Compactando retratos: ${index + 1} de ${retratos.length}…`);
+            try {
+                const retrato = await compactarRetratoExistente(personagem.imagem);
+                if (retrato.dataURL.length >= personagem.imagem.length) continue;
+                await store.salvarPersonagem({ ...personagem, imagem: retrato.dataURL }, personagem);
+                updated++; saved += personagem.imagem.length - retrato.dataURL.length;
+            } catch (error) { console.error('Falha ao compactar', personagem.nome, error); failed++; }
+        }
+        dirty = false; editar();
+        await recarregar();
+        status(`${updated} retratos compactados. Economia: ${(saved / 1024).toFixed(1)} KiB no banco.${failed ? ` ${failed} retratos não foram alterados por erro; recarregue e tente novamente.` : ''}`, failed ? 'error' : 'success');
     });
 });
 

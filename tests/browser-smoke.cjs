@@ -124,9 +124,10 @@ const server = http.createServer(async (request, response) => {
         const prepared = await page.locator('#image-preview').getAttribute('src');
         const payload = prepared.split(',')[1];
         assert.ok(prepared.startsWith('data:image/webp;base64,'));
-        assert.ok(Buffer.from(payload, 'base64').length <= 64 * 1024);
+        assert.ok(Buffer.from(payload, 'base64').length <= 24 * 1024);
+        assert.ok(prepared.length <= 32791);
         const dimensions = await page.locator('#image-preview').evaluate(image => ({ width: image.naturalWidth, height: image.naturalHeight }));
-        assert.ok(dimensions.width <= 512 && dimensions.height <= 512);
+        assert.ok(dimensions.width <= 320 && dimensions.height <= 320);
         assert.ok(Math.abs(dimensions.width / dimensions.height - 4 / 3) < 0.02);
         await page.getByRole('button', { name: 'Salvar personagem', exact: true }).click();
         await page.waitForFunction(() => document.getElementById('character-count').textContent === '289');
@@ -158,8 +159,40 @@ const server = http.createServer(async (request, response) => {
         await jogo.locator('#guess-input').fill('Teste <b>');
         await jogo.locator('.autocomplete-item img').waitFor();
         assert.equal(await jogo.locator('.autocomplete-item img').getAttribute('src'), prepared);
-        console.log('OK: upload reduzido a 512px/64KiB, persistência real no emulador, imagem na biblioteca e no jogo.');
+        console.log(`OK: upload comprimido a ${dimensions.width}x${dimensions.height}, ${(Buffer.from(payload, 'base64').length / 1024).toFixed(1)} KiB (meta 16, limite 24), persistência e exibição no jogo.`);
         console.log('OK: cadastro, edição, participações, idade indefinida, filtro e texto seguro.');
+
+        // Simula uma imagem gravada pela versão anterior (até 64 KiB).
+        const legacyPortrait = await page.evaluate(async png => {
+            const image = new Image(); image.src = `data:image/png;base64,${png}`; await image.decode();
+            const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 384;
+            canvas.getContext('2d').drawImage(image, 0, 0, 512, 384);
+            for (const quality of [0.9, 0.75, 0.6, 0.4]) {
+                const value = canvas.toDataURL('image/webp', quality);
+                const bytes = atob(value.split(',')[1]).length;
+                if (bytes > 24 * 1024 && bytes <= 64 * 1024) return value;
+            }
+            throw new Error('Não foi possível criar a imagem antiga do teste.');
+        }, portraitPNG);
+        const portraitId = await page.evaluate(async () => {
+            const { listarPersonagens } = await import('./personagens-store.js');
+            return (await listarPersonagens()).find(p => p.nome === 'Teste <b>seguro</b>').id;
+        });
+        const portraitURL = `${emulator}/v1/projects/${project}/databases/(default)/documents/personagens/${portraitId}`;
+        const seed = await fetch(`${portraitURL}?updateMask.fieldPaths=imagem`, { method: 'PATCH', headers: {
+            'Content-Type': 'application/json', Authorization: 'Bearer owner'
+        }, body: JSON.stringify({ fields: { imagem: { stringValue: legacyPortrait } } }) });
+        assert.equal(seed.status, 200);
+        await page.locator('#compact-images').click();
+        await page.waitForFunction(() => document.getElementById('admin-status').textContent.startsWith('1 retratos compactados.'));
+        const compacted = await (await fetch(portraitURL)).json();
+        assert.ok(compacted.fields.imagem.stringValue.length < legacyPortrait.length);
+        assert.ok(compacted.fields.imagem.stringValue.length <= 32791);
+        await page.locator('#compact-images').click();
+        await page.waitForFunction(() => document.getElementById('admin-status').textContent.startsWith('0 retratos compactados.'));
+        const repeated = await (await fetch(portraitURL)).json();
+        assert.deepEqual(repeated.fields.updatedAt, compacted.fields.updatedAt);
+        console.log('OK: compactação de retratos antigos reduz o banco; repetir não regrava nem degrada a imagem.');
 
         // Duas abas editam a mesma versão: a segunda gravação deve ser rejeitada.
         await page.getByRole('button', { name: 'Editar Teste <b>seguro</b>', exact: true }).click();

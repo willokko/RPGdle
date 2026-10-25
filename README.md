@@ -19,7 +19,8 @@ Acesse `admin.html` diretamente. Não há link nos menus públicos. O painel sol
 - Importar os 288 personagens do CSV uma única vez.
 - Buscar, cadastrar, editar e excluir personagens.
 - Ajustar participações com os botões do formulário e salvar.
-- Editar atributos e enviar retratos pelo próprio painel, reduzidos a até 512 pixels e 64 KiB antes de salvar no Firestore.
+- Editar atributos e enviar retratos pelo próprio painel: até 320 pixels, meta de 16 KiB e limite de 24 KiB antes de salvar no Firestore.
+- Compactar retratos já salvos no banco, com resumo da economia obtida e sem regravar imagens que já estão otimizadas.
 
 O Firebase Authentication valida a senha e as regras do Firestore autorizam alterações somente ao UID administrativo. O endereço do painel e a configuração pública do Firebase não são mecanismos de proteção.
 
